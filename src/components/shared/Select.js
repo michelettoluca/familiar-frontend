@@ -6,8 +6,8 @@ export const Select = styled.select`
 	justify-content: center;
 	column-gap: 0.5rem;
 
-	padding: 0.5rem 0.75rem;
-	width: ${({ fullWidth }) => fullWidth || "fit-content"};
+	padding: 0.75rem;
+	width: ${({ fullWidth }) => (fullWidth ? "100%" : "fit-content")};
 
 	color: var(--gray-800);
 

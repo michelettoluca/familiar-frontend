@@ -1,3 +1,5 @@
+import styled from "styled-components";
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
@@ -5,11 +7,38 @@ import { useSession } from "../../contexts/SessionContext";
 
 import * as api from "../../utils/familiarApi";
 
-import * as Button from "../../components/shared/Button";
 import * as Container from "../../components/shared/Container";
+import * as Divider from "../../components/shared/Divider";
+import * as Button from "../../components/shared/Button";
 import * as Icon from "../../components/shared/Icons";
-import { Heading2, Paragraph } from "../../components/shared/Typography";
+import * as T from "../../components/shared/Typography";
 import { NewPlayerModal } from "../../components/dashbaord/NewPlayerModal";
+
+const PlusIcon = styled(Icon.Plus)`
+	height: 1rem;
+	width: 1rem;
+`;
+
+const PlayerList = styled(Container.Root)`
+	padding: 0;
+`;
+
+const Player = styled.div`
+	padding: 1.25rem;
+	:not(:last-child) {
+		border-bottom: 1px solid var(--gray-300);
+	}
+`;
+
+const FullName = styled(Link)`
+	color: inherit;
+	font-weight: 500;
+	text-decoration-thickness: 2px;
+`;
+
+const Username = styled.span`
+	font-size: 0.75rem;
+`;
 
 export const Players = () => {
 	const { user } = useSession();
@@ -20,8 +49,6 @@ export const Players = () => {
 
 	const [showModal, setShowModal] = React.useState(false);
 
-	if (status === "idle") return null;
-
 	if (status === "error") return <span>error</span>;
 
 	if (status === "loading") return <span>loading...</span>;
@@ -30,41 +57,29 @@ export const Players = () => {
 		<>
 			{showModal && <NewPlayerModal hideModal={() => setShowModal(false)} />}
 			<div className="flex items-end justify-between">
-				<Heading2>Giocatori</Heading2>
+				<T.Heading4>Giocatori</T.Heading4>
 				<Button.Light onClick={() => setShowModal(true)}>
-					<Icon.Plus className="h-5 w-5" />
+					<PlusIcon />
 					Aggiungi giocatore
 				</Button.Light>
 			</div>
-			<hr />
-			<Container.Root>
+			<Divider.Horizontal />
+			<PlayerList>
 				{players?.length !== 0 ? (
 					players?.map((player) => (
-						<div
-							key={player.id}
-							className="flex items-end justify-between px-8 py-5 last:border-b-0 border-b border-b-gray-200"
-						>
-							<div className="flex items-baseline gap-x-1">
-								<Link
-									to={`${player.id}`}
-									className="font-medium hover:underline decoration-2 cursor-pointer"
-								>
-									{player.firstName} {player.lastName}
-								</Link>
-								<span className="text-xs font-normal text-gray-400">
-									({player.identifier})
-								</span>
-							</div>
-						</div>
+						<Player key={player.id}>
+							<FullName to={`${player.id}`}>
+								{player.firstName} {player.lastName}
+							</FullName>
+							<Username> ({player.username})</Username>
+						</Player>
 					))
 				) : (
 					<div className="flex items-center justify-between px-8 py-5">
-						<Paragraph className="text-gray-400">
-							Nessun giocatore trovato
-						</Paragraph>
+						<T.EmptyState>Nessun giocatore trovato</T.EmptyState>
 					</div>
 				)}
-			</Container.Root>
+			</PlayerList>
 		</>
 	);
 };

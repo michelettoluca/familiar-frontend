@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 import { useRef, useState } from "react";
 import { useClickOutside } from "../../utils/hooks/useClickOutside";
+import { useCallback } from "react";
 
 const Overlay = styled.div`
 	position: fixed;
@@ -40,9 +41,9 @@ export const Modal = ({ onClickOutside, children, ...props }) => {
 export const useModal = (initialState = false) => {
 	const [isOpen, setIsOpen] = useState(initialState);
 
-	const open = () => setIsOpen(true);
-	const close = () => setIsOpen(false);
-	const toggle = () => setIsOpen(!isOpen);
+	const open = useCallback(() => setIsOpen(true), []);
+	const close = useCallback(() => setIsOpen(false), []);
+	const toggle = useCallback(() => setIsOpen(!isOpen), [isOpen]);
 
 	return { isOpen, open, close, toggle };
 };

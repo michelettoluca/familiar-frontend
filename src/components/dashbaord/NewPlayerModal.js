@@ -7,6 +7,8 @@ import { useSession } from "../../contexts/SessionContext";
 import * as api from "../../utils/familiarApi";
 
 import * as Button from "../shared/Button";
+import * as Container from "../shared/Container";
+import * as Divider from "../shared/Divider";
 import * as Input from "../shared/Input";
 import { Modal } from "../shared/Modal";
 
@@ -16,8 +18,11 @@ export const NewPlayerModal = ({ hideModal }) => {
 
 	const { user } = useSession();
 
-	const { mutateAsync: createPlayer } = useMutation(api.createPlayer, {
-		onSuccess: () => queryClient.invalidateQueries("players"),
+	const { mutate: createPlayer } = useMutation(api.createPlayer, {
+		onSuccess: () => {
+			queryClient.invalidateQueries("players");
+			hideModal();
+		},
 		onError: (err) => setError(err.response.data),
 	});
 
@@ -31,29 +36,22 @@ export const NewPlayerModal = ({ hideModal }) => {
 
 	useClickOutside(modalRef, hideModal);
 
-	const handleRegisterPlayer = async () => {
+	const handleRegisterPlayer = () => {
 		const { firstName, lastName, identifier } = playerInfo;
 
-		await createPlayer({
+		createPlayer({
 			firstName,
 			lastName,
 			identifier,
 			leagueId: user.leagueId,
 		});
-
-		hideModal();
 	};
 
 	return (
-		<Modal.Root onClickOutside={hideModal}>
-			<Modal.Header>
-				<Modal.Title>Registra giocatore</Modal.Title>
-				<Modal.Description>
-					Inserisci le informazioni del nuovo giocatore.
-				</Modal.Description>
-			</Modal.Header>
-			<Modal.Divider />
-			<Modal.Content className="flex flex-col gap-y-2">
+		<Modal onClickOutside={hideModal}>
+			<Container.Root>
+				Registra giocatore Inserisci le informazioni del nuovo giocatore.
+				<Divider.Horizontal />
 				{error && error.msg}
 				<Input.Text
 					placeholder="Nome"
@@ -67,18 +65,10 @@ export const NewPlayerModal = ({ hideModal }) => {
 					name="lastName"
 					onChange={setPlayerInfo}
 				/>
-				<Input.Text
-					placeholder="Identificativo"
-					value={playerInfo.identifier}
-					name="identifier"
-					onChange={setPlayerInfo}
-				/>
-			</Modal.Content>
-			<Modal.Footer>
 				<Button.Dark onClick={handleRegisterPlayer}>
 					Aggiungi giocatore
 				</Button.Dark>
-			</Modal.Footer>
-		</Modal.Root>
+			</Container.Root>
+		</Modal>
 	);
 };

@@ -18,7 +18,7 @@ export const Player = () => {
 	const navigate = useNavigate();
 	const { playerId } = useParams();
 
-	const { isModalOpen, closeModal } = useModal();
+	const { isOpen, open, close } = useModal();
 
 	const queries = useQueries([
 		{
@@ -33,8 +33,6 @@ export const Player = () => {
 
 	const status = getQueriesStatus(queries);
 
-	if (status === "idle") return null;
-
 	if (status === "error") return <span>error</span>;
 
 	if (status === "loading") return <span>loading...</span>;
@@ -46,11 +44,9 @@ export const Player = () => {
 
 	return (
 		<>
-			{isModalOpen && <DeletePlayerModal close={closeModal} player={player} />}
-			<Button.Light
-				iconBefore={<Icon.ChevronUp className="-rotate-90 " />}
-				onClick={() => navigate("/dashboard/players")}
-			>
+			{isOpen && <DeletePlayerModal close={close} player={player} />}
+			<Button.Light onClick={() => navigate("/dashboard/players")}>
+				<Icon.ChevronUp />
 				Giocatori
 			</Button.Light>
 			<div className="flex justify-between items-end max-w-5xl gap-x-4">
@@ -58,8 +54,8 @@ export const Player = () => {
 					<Heading2>{player.firstName + " " + player.lastName}</Heading2>
 				</div>
 
-				<Button.Red onClick={closeModal}>
-					<Icon.Trash className="h-5 w-5" />
+				<Button.Red onClick={open}>
+					<Icon.Trash />
 					Rimuovi giocatore
 				</Button.Red>
 			</div>

@@ -6,10 +6,8 @@ const Button = styled.button`
 	justify-content: center;
 	column-gap: 0.5rem;
 
-	padding: 0.5rem 0.75rem;
+	padding: ${({ small }) => (small ? "0.5rem" : "0.75rem")};
 	width: ${({ fullWidth }) => (fullWidth ? "100%" : "fit-content")};
-
-	font-weight: 600;
 
 	border: 1px solid transparent;
 	border-radius: 2px;
@@ -43,5 +41,5 @@ export const Dark = styled(Button)`
 
 export const Red = styled(Button)`
 	color: var(--gray-50);
-	background-color: var(--gray-800);
+	background-color: var(--red-500);
 `;

@@ -5,7 +5,7 @@ const Input = styled.input`
 	align-items: center;
 	justify-content: center;
 
-	padding: 0.5rem 0.75rem;
+	padding: 0.75rem;
 	width: ${({ fullWidth }) => (fullWidth ? "100%" : "fit-content")};
 
 	border: 1px solid var(--gray-300);

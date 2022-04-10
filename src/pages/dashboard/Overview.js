@@ -1,3 +1,5 @@
+import styled from "styled-components";
+
 import { useQueries } from "react-query";
 import { Link } from "react-router-dom";
 import { useSession } from "../../contexts/SessionContext";
@@ -6,7 +8,8 @@ import * as api from "../../utils/familiarApi";
 import { getQueriesStatus } from "../../utils/getQueriesStatus";
 
 import * as Container from "../../components/shared/Container";
-import { Heading1, Paragraph } from "../../components/shared/Typography";
+import * as T from "../../components/shared/Typography";
+import * as Divider from "../../components/shared/Divider";
 
 export const Overview = () => {
 	const { user } = useSession();
@@ -19,6 +22,7 @@ export const Overview = () => {
 		{
 			queryKey: ["league", user.leagueId, "leaderboard"],
 			queryFn: () => api.getLeagueLeaderboard({ leagueId: user.leagueId }),
+			initialData: [],
 		},
 	]);
 
@@ -26,24 +30,18 @@ export const Overview = () => {
 
 	const [{ data: league }, { data: leaderboard }] = queries;
 
-	if (status === "idle") return null;
-
 	if (status === "loading") return <span>loading...</span>;
 
-	if (status === "error") return <span>error</span>;
+	// if (status === "error") return <span>error</span>;
 
 	return (
 		<>
-			<div className="flex items-end h-[38px]">
-				<div className="flex items-baseline  gap-x-2 ">
-					<Heading1>{league.name}</Heading1>{" "}
-					<span className="text-gray-400">{league.tag}</span>
-				</div>
-			</div>
-			<hr />
+			<T.Heading3>{league.name}</T.Heading3>{" "}
+			<T.Paragraph>{league.tag}</T.Paragraph>
+			<Divider.Horizontal />
 			<Container.Root>
-				{leaderboard?.length !== 0 ? (
-					leaderboard?.map(({ player, points }) => (
+				{leaderboard?.length ? (
+					leaderboard.map(({ player, points }) => (
 						<div
 							key={player.id}
 							className="flex items-start justify-between px-8 py-5 last:border-b-0 border-b border-b-gray-200"
@@ -65,11 +63,7 @@ export const Overview = () => {
 						</div>
 					))
 				) : (
-					<div className="flex items-center justify-between px-8 py-5">
-						<Paragraph className="text-gray-400">
-							Nessun evento trovato
-						</Paragraph>
-					</div>
+					<T.EmptyState>Nessun evento trovato</T.EmptyState>
 				)}
 			</Container.Root>
 		</>

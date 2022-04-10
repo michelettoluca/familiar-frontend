@@ -14,9 +14,9 @@ export const DeletePlayerModal = ({ hideModal, player }) => {
 
 	const { mutate: deletePlayer } = useMutation(api.deletePlayer, {
 		onSuccess: () => {
-			queryClient.invalidateQueries("players");
-			queryClient.removeQueries(["players", player.id]);
 			navigate("/dashboard/players");
+			queryClient.removeQueries(["players", player.id]);
+			queryClient.invalidateQueries("players");
 		},
 	});
 
@@ -25,35 +25,28 @@ export const DeletePlayerModal = ({ hideModal, player }) => {
 	useClickOutside(modalRef, hideModal);
 
 	return (
-		<Modal.Root onClickOutside={hideModal}>
-			<Modal.Header>
-				<Modal.Title>Rimuovi giocatore</Modal.Title>
-			</Modal.Header>
-			<Modal.Divider />
-			<Modal.Content>
-				<p>
-					Sei sicuro di voler rimuovere{" "}
-					<span className="font-medium text-gray-900">
-						{player.firstName + " " + player.lastName}
-					</span>
-					?
-				</p>
-				<p>
-					Tutti i suoi risultati appariranno come "Account eliminato", questa
-					operazione è irreversibile.
-				</p>
-			</Modal.Content>
-			<Modal.Footer>
-				<span
-					className="text-gray-400 font-medium hover:underline decoration-2 cursor-pointer"
-					onClick={hideModal}
-				>
-					Annulla
+		<Modal onClickOutside={hideModal}>
+			Rimuovi giocatore
+			<p>
+				Sei sicuro di voler rimuovere{" "}
+				<span className="font-medium text-gray-900">
+					{player.firstName + " " + player.lastName}
 				</span>
-				<Button.Red onClick={() => deletePlayer({ playerId: player.id })}>
-					Rimuovi
-				</Button.Red>
-			</Modal.Footer>
-		</Modal.Root>
+				?
+			</p>
+			<p>
+				Tutti i suoi risultati appariranno come "Account eliminato", questa
+				operazione è irreversibile.
+			</p>
+			<span
+				className="text-gray-400 font-medium hover:underline decoration-2 cursor-pointer"
+				onClick={hideModal}
+			>
+				Annulla
+			</span>
+			<Button.Red onClick={() => deletePlayer({ playerId: player.id })}>
+				Rimuovi
+			</Button.Red>
+		</Modal>
 	);
 };

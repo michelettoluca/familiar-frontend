@@ -1,14 +1,16 @@
-import React from "react";
-import * as api from "../utils/familiarApi";
-import { useQuery, useMutation } from "react-query";
 import decodeJwt from "jwt-decode";
+
+import React from "react";
+import { useQuery, useMutation } from "react-query";
+
+import * as api from "../utils/familiarApi";
 
 const SessionContext = React.createContext();
 
 export const SessionProvider = ({ children }) => {
 	const [user, setUser] = React.useState(null);
 
-	useQuery("accessToken", () => api.refreshToken(), {
+	const { status } = useQuery("accessToken", () => api.refreshToken(), {
 		onSuccess: (newAccessToken) => setUser(decodeJwt(newAccessToken)),
 		retry: false,
 		refetchOnWindowFocus: false,
@@ -23,18 +25,19 @@ export const SessionProvider = ({ children }) => {
 		onSuccess: () => setUser(null),
 	});
 
-	const contextValue = {
-		user,
-		signIn,
-		signOut,
-	};
+	// console.log(status, user);
 
-	// if (status === "idle") return null;
-
-	// if (status === "loading") return <span>loading...</span>;
+	if (status === "loading") return <span>loading...</span>;
 
 	return (
-		<SessionContext.Provider value={contextValue}>
+		<SessionContext.Provider
+			value={{
+				user,
+				signIn,
+				signOut,
+				setUser,
+			}}
+		>
 			{children}
 		</SessionContext.Provider>
 	);

@@ -2,9 +2,11 @@ import React from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useSession } from "../../contexts/SessionContext";
 
+import { role } from "../../utils/constants";
+
 import * as Input from "../../components/shared/Input";
 import * as Button from "../../components/shared/Button";
-import { Heading4 } from "../../components/shared/Typography";
+import * as T from "../../components/shared/Typography";
 
 export const SignIn = () => {
 	const { user, signIn } = useSession();
@@ -21,10 +23,10 @@ export const SignIn = () => {
 		navigate("/admin");
 	};
 
-	if (user?.role === "admin") return <Navigate to="/admin" replace={true} />;
+	if (user?.role === role.ADMIN) return <Navigate to="/admin" replace={true} />;
 
 	return (
-		<div className="flex  items-center justify-center h-screen">
+		<div className="flex items-center justify-center h-screen">
 			<form
 				id="signup"
 				onSubmit={(e) => {
@@ -33,7 +35,7 @@ export const SignIn = () => {
 				}}
 			>
 				<div className="flex flex-col p-8 w-96 bg-white shadow-sm rounded-sm gap-2">
-					<Heading4>Admin</Heading4>
+					<T.Heading4>Admin</T.Heading4>
 					<Input.Text
 						type="text"
 						value={username}

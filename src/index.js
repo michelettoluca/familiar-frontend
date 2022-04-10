@@ -2,18 +2,19 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
-import { SessionProvider } from "./contexts/SessionContext";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { RequireAuth } from "./components/RequireAuth";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { SessionProvider } from "./contexts/SessionContext";
+
+import { role } from "./utils/constants";
 
 import * as PublicPages from "./pages/public";
 import * as DashboardPages from "./pages/dashboard";
 import * as AdminPages from "./pages/admin";
 
+import { RequireAuth } from "./components/RequireAuth";
 import { Dashboard } from "./layouts/Dashboard";
 import { Admin } from "./layouts/Admin";
-
-import { QueryClient, QueryClientProvider } from "react-query";
 
 const queryClient = new QueryClient({
 	defaultOptions: { queries: { refetchOnMount: true } },
@@ -37,7 +38,7 @@ ReactDOM.render(
 								path="dashboard"
 								element={
 									<RequireAuth
-										allowedRole="organizer"
+										allowedRole={role.ORGANIZER}
 										redirectTo="/dashboard/sign-in"
 									>
 										<Dashboard />
@@ -64,7 +65,7 @@ ReactDOM.render(
 							<Route
 								path="admin"
 								element={
-									<RequireAuth allowedRole="admin" redirectTo="sign-in">
+									<RequireAuth allowedRole={role.ADMIN} redirectTo="sign-in">
 										<Admin />
 									</RequireAuth>
 								}

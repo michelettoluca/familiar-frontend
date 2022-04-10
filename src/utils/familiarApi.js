@@ -1,13 +1,12 @@
 import Axios from "axios";
 
 // const baseURL = "http://18.197.8.167:4000/";
-const baseURL = "http://localhost:4000/";
+const baseURL = "http://localhost:4000/api";
 
 export const PrivateClient = Axios.create({ baseURL });
-
 export const PublicClient = Axios.create({ baseURL });
 
-PrivateClient.interceptors.request.use(async config => {
+PrivateClient.interceptors.request.use(async (config) => {
 	const accessToken = await refreshToken();
 
 	if (accessToken) config.headers.Authorization = "Bearer " + accessToken;
@@ -25,7 +24,7 @@ export const refreshToken = async () => {
 
 export const signIn = async ({ username, password }) => {
 	const { data } = await PublicClient.post(
-		"auth/sign-in",
+		"/auth/sign-in",
 		{ username, password },
 		{ withCredentials: true }
 	);
@@ -34,7 +33,7 @@ export const signIn = async ({ username, password }) => {
 };
 
 export const signOut = async () => {
-	const { data } = await PrivateClient.delete("auth/sign-out", {
+	const { data } = await PrivateClient.delete("/auth/sign-out", {
 		withCredentials: true,
 	});
 
@@ -55,7 +54,7 @@ export const getArchetype = async ({ archetypeId }) => {
 
 export const createArchetype = async ({ name, playstyle, colors }) => {
 	const { data } = await PrivateClient.post(
-		"archetypes",
+		"/archetypes",
 		{
 			name,
 			playstyle,
@@ -68,7 +67,7 @@ export const createArchetype = async ({ name, playstyle, colors }) => {
 };
 
 export const deleteArchetype = async ({ archetypeId }) => {
-	const { data } = await PrivateClient.delete(`archetypes/${archetypeId}`);
+	const { data } = await PrivateClient.delete(`/archetypes/${archetypeId}`);
 
 	return data;
 };
@@ -87,7 +86,7 @@ export const getSeason = async ({ seasonId }) => {
 
 export const createSeason = async ({ name, beginsAt }) => {
 	const { data } = await PrivateClient.post(
-		"seasons",
+		"/seasons",
 		{
 			name,
 			beginsAt,
@@ -99,14 +98,14 @@ export const createSeason = async ({ name, beginsAt }) => {
 };
 
 export const deleteSeason = async ({ seasonId }) => {
-	const { data } = await PrivateClient.delete(`seasons/${seasonId}`);
+	const { data } = await PrivateClient.delete(`/seasons/${seasonId}`);
 
 	return data;
 };
 
 export const createLeague = async ({ name, tag, password }) => {
 	const { data } = await PrivateClient.post(
-		"leagues",
+		"/leagues",
 		{
 			name,
 			tag,
@@ -119,7 +118,7 @@ export const createLeague = async ({ name, tag, password }) => {
 };
 
 export const deleteLeague = async ({ leagueId }) => {
-	const { data } = await PrivateClient.delete(`leagues/${leagueId}`, {
+	const { data } = await PrivateClient.delete(`/leagues/${leagueId}`, {
 		withCredentials: true,
 	});
 
