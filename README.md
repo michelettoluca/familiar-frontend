@@ -6,7 +6,7 @@
 
 > ⚠️
 > 
-> I'm currently moving from `tailwindcss` to `styled-components` so some components are not styled correctly and the code might be a litte messy.
+> I'm currently refactoring from `tailwindcss` to `styled-components` so some components are not styled correctly and the code might be a litte messy.
 
 ## Introduction
 Familiar is a webapp I'm developing for Lega Pauper Italia which main purpose is to improve the management of [Magic: the Gathering](https://en.wikipedia.org/wiki/Magic:_The_Gathering) leagues organized in various regions of Italy (at the moment there are more than 20 active leagues, with about 30 regular players each). 
