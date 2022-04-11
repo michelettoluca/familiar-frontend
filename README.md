@@ -22,6 +22,3 @@ The application will also have a public section where players can see a detailed
 ### Organizers 
 - Subscribe or unsubscribe a player from their league
 - Submit weekly event results specifying deck, score and rank of each player
-
-## Database schema
-![Database schema](https://i.imgur.com/K72seh0.png)
