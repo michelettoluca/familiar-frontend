@@ -1,6 +1,5 @@
 ![JS logo](https://i.imgur.com/tvJMlaz.png)
 ![React logo](https://i.imgur.com/6srbJj2.png)
-![Node.js logo](https://i.imgur.com/fhQkhYw.png)
 
 # Familiar
 Familiar is a webapp I'm developing for Lega Pauper Italia which main purpose is to improve the management of [Magic: the Gathering](https://en.wikipedia.org/wiki/Magic:_The_Gathering) leagues organized in various regions of Italy. 
