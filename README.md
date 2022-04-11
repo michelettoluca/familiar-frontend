@@ -3,22 +3,29 @@
 ![Node.js logo](https://i.imgur.com/fhQkhYw.png)
 
 # Familiar
+Familiar is a webapp I'm developing for Lega Pauper Italia which main purpose is to improve the management of [Magic: the Gathering](https://en.wikipedia.org/wiki/Magic:_The_Gathering) leagues organized in various regions of Italy. 
 
-> ⚠️
-> 
-> I'm currently refactoring from `tailwindcss` to `styled-components` so some components are not styled correctly and the code might be a little messy.
+## Packages
+- React
+- React-query
+- React-router
+- Styled-components (moving from tailwindcss)
+- Axios
 
-## Introduction
-Familiar is a webapp I'm developing for Lega Pauper Italia which main purpose is to improve the management of [Magic: the Gathering](https://en.wikipedia.org/wiki/Magic:_The_Gathering) leagues organized in various regions of Italy (at the moment there are more than 20 active leagues, with about 30 regular players each). 
-The application will also have a public section where players can see a detailed view of each league event and its leaderboard.
+## Todos
 
-## Roles
+### Admin dashboard
+- [x] **Create** /  **edit** / **delete** leagues 
+- [x] **Create** /  **edit** / **delete** decks 
+- [x] **Create** /  **edit** / **delete** seasons 
+- [ ] **Merge** player data 
 
-### Administrators  
-- Create and edit leagues
-- Define the beginning and the end of seasons
-- Define a list of macro categories of decks (specifying name, [archetype](https://mtg.fandom.com/wiki/Archetype) and [color](https://mtg.fandom.com/wiki/Color)) that will be available on the platform 
+### Organizer dashboard 
+- [x] **Subscribe** / **unsubscribe** players
+- [x] **Create** / **edit** events
+- [ ] Duplicate name check
 
-### Organizers 
-- Subscribe or unsubscribe a player from their league
-- Submit weekly event results specifying deck, score and rank of each player
+### Public
+- [ ] League leaderboard  
+- [ ] Event details 
+- [ ] Metagame analysis
