@@ -13,16 +13,16 @@ Familiar is a fullstack application I'm developing for Lega Pauper Italia which 
 
 ## Todos
 
+### Organizer dashboard 
+- [x] **Subscribe** / **unsubscribe** players
+- [x] **Create** / **edit** events
+- [ ] Duplicate name check
+
 ### Admin dashboard
 - [x] **Create** /  **edit** / **delete** leagues 
 - [x] **Create** /  **edit** / **delete** decks 
 - [x] **Create** /  **edit** / **delete** seasons 
 - [ ] **Merge** player data 
-
-### Organizer dashboard 
-- [x] **Subscribe** / **unsubscribe** players
-- [x] **Create** / **edit** events
-- [ ] Duplicate name check
 
 ### Public
 - [ ] League leaderboard  
@@ -30,11 +30,37 @@ Familiar is a fullstack application I'm developing for Lega Pauper Italia which 
 - [ ] Metagame analysis
 
 ## Screenshots
+
+### Organizer dashboard
+
 *Sign in*
-![Sign in](https://i.imgur.com/m3BasGx.png)
-*Register new player*
-![Register player form](https://i.imgur.com/i0sO6VE.png)
+![Sign in](https://i.imgur.com/4vmc0ya.png)
+
+*Home*
+![Home](https://i.imgur.com/KEEvLkM.png)
+
+*Player list*
+![Player list](https://i.imgur.com/cqDuSBO.png)
+
+*New player*
+![New player](https://i.imgur.com/xPvwzfK.png)
+
+*Player event list*
+![Player event list](https://i.imgur.com/I5p4z9m.png)
+
+*Event list*
+![Event list](https://i.imgur.com/D73PlyP.png)
+
 *Create event*
-![Create event page](https://i.imgur.com/KwFFG7L.png)
-*Event details*
-![Event details](https://i.imgur.com/WpaoZpj.png)
+![Create event](https://i.imgur.com/3NcTQwf.png)
+
+### Admin dashboard
+
+*League list*
+![League list](https://i.imgur.com/yx8J8nU.png)
+
+*Archetype list*
+![Archetype list](https://i.imgur.com/IM8zOw6.png)
+
+*Season list*
+![Season list](https://i.imgur.com/ffel3v9.png)
