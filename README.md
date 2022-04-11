@@ -34,7 +34,7 @@ Familiar is a fullstack application I'm developing for Lega Pauper Italia which 
 ![Sign in](https://i.imgur.com/m3BasGx.png)
 *Register new player*
 ![Register player form](https://i.imgur.com/i0sO6VE.png)
-*Create event page*
+*Create event*
 ![Create event page](https://i.imgur.com/KwFFG7L.png)
-*Event details page*
+*Event details*
 ![Event details](https://i.imgur.com/WpaoZpj.png)
