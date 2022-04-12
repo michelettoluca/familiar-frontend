@@ -7,8 +7,6 @@ export const Root = styled.div`
 
 	background-color: white;
 
-	/* shadow */
-
-	border: 1px solid var(--gray-300);
-	border-radius: 2px;
+	border: 1px solid var(--gray-200);
+	border-radius: var(--border-radius);
 `;

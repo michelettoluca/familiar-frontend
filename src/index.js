@@ -46,8 +46,7 @@ ReactDOM.render(
 								}
 							>
 								<Route index element={<DashboardPages.Overview />} />
-								<Route path="players">
-									<Route index element={<DashboardPages.Players />} />
+								<Route path="players" element={<DashboardPages.Players />}>
 									<Route path=":playerId" element={<DashboardPages.Player />} />
 								</Route>
 								<Route path="events">

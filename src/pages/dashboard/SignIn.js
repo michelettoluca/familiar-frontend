@@ -22,18 +22,21 @@ const StyledContainer = styled(Container.Root)`
 	top: 50%;
 	left: 50%;
 
-	transform: translate(-50%, -50%);
-
 	display: flex;
 	flex-direction: column;
 
 	width: 320px;
+
+	transform: translate(-50%, -50%);
+
+	border-radius: 8px;
 
 	@media (max-width: 30rem) {
 		width: 100%;
 		height: 100%;
 		border: 0px;
 		justify-content: center;
+		border-radius: 0;
 	}
 `;
 

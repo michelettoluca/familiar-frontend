@@ -8,7 +8,7 @@ const Overlay = styled.div`
 	position: fixed;
 	inset: 0;
 
-	backdrop-filter: blur(1px) brightness(0.8);
+	background-color: rgba(0, 0, 0, 0.5);
 
 	z-index: 20;
 `;

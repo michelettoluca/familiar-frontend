@@ -10,7 +10,7 @@ const Button = styled.button`
 	width: ${({ fullWidth }) => (fullWidth ? "100%" : "fit-content")};
 
 	border: 1px solid transparent;
-	border-radius: 2px;
+	border-radius: var(--border-radius);
 
 	cursor: pointer;
 

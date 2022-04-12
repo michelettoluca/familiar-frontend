@@ -9,7 +9,13 @@ const Input = styled.input`
 	width: ${({ fullWidth }) => (fullWidth ? "100%" : "fit-content")};
 
 	border: 1px solid var(--gray-300);
-	border-radius: 2px;
+	border-radius: var(--border-radius);
+
+	color: var(--gray-600);
+
+	&::placeholder {
+		color: var(--gray-400);
+	}
 
 	&:hover {
 		filter: brightness(1.02);

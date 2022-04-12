@@ -22,6 +22,8 @@
 	--red-700: #b91c1c;
 	--red-800: #991b1b;
 	--red-900: #7f1d1d;
+
+	--border-radius: 8px;
 }
 
 body {

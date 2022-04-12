@@ -9,12 +9,12 @@ export const Select = styled.select`
 	padding: 0.75rem;
 	width: ${({ fullWidth }) => (fullWidth ? "100%" : "fit-content")};
 
-	color: var(--gray-800);
+	color: var(--gray-600);
 
 	background-color: white;
 
 	border: 1px solid var(--gray-300);
-	border-radius: 2px;
+	border-radius: var(--border-radius);
 
 	&::placeholder {
 		color: var(--gray-400);

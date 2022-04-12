@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const Divider = styled.div`
-	background-color: var(--gray-300);
+	background-color: var(--gray-200);
 `;
 
 export const Horizontal = styled(Divider)`
