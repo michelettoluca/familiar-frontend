@@ -1,6 +1,8 @@
 ![JS logo](https://i.imgur.com/tvJMlaz.png)
 ![React logo](https://i.imgur.com/6srbJj2.png)
 
+> Currently redesigning the interface ![Figma project](https://www.figma.com/file/tA7X71LhgGtvBw62BpRUuO/Familiar-re-design?node-id=10%3A385)
+
 # Familiar
 Familiar is a fullstack application I'm developing for Lega Pauper Italia which main purpose is to improve the management of [Magic: the Gathering](https://en.wikipedia.org/wiki/Magic:_The_Gathering) leagues organized in various regions of Italy. 
 
