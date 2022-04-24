@@ -1,88 +1,70 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-import { Link } from "react-router-dom";
+import { Link, useMatch, useResolvedPath } from "react-router-dom";
 
-import { screenSize } from "../../utils/constants";
+const StyledRoot = styled.div`
+	position: sticky;
 
-export const Root = styled.div`
-	display: flex;
-	flex-direction: column;
 	background-color: white;
 
-	border-right: 1px solid var(--gray-300);
-	padding: 0.5rem;
-
-	width: 16rem;
-
-	@media (max-width: ${screenSize.laptop}) {
-		width: auto;
-	}
+	border: 1px solid var(--gray-200);
 `;
 
-const StyledLogo = styled.div`
+export const Root = ({ children }) => (
+	<StyledRoot>
+		<NavItems>{children}</NavItems>
+	</StyledRoot>
+);
+
+const NavItems = styled.div`
 	display: flex;
-	flex-direction: column;
+	gap: 0.5rem;
 
-	padding: 0.5rem 0.75rem;
+	margin: 0 auto;
+	padding: 2rem 2rem 0.5rem;
+
+	max-width: 1200px;
 `;
 
-const FamiliarLogo = styled.h2`
-	font-family: "Poppins", sans-serif;
-
-	&::after {
-		content: "Familiar.";
-	}
-
-	@media (max-width: ${screenSize.laptop}) {
-		&::after {
-			content: "F.";
-		}
-	}
+export const Logo = styled.span`
+	font-weight: 700;
+	padding: 0.5rem 0;
+	cursor: default;
 `;
-
-const Domain = styled.span`
-	@media (max-width: ${screenSize.laptop}) {
-		display: none;
-	}
-`;
-
-export const Logo = ({ domain }) => {
-	return (
-		<StyledLogo>
-			<FamiliarLogo />
-			{domain && <Domain>{domain}</Domain>}
-		</StyledLogo>
-	);
-};
 
 const StyledItem = styled(Link)`
-	display: flex;
-	align-items: center;
-	column-gap: 0.5rem;
+	margin-left: ${({ $signOut }) => $signOut && "auto"};
 	padding: 0.5rem 0.75rem;
 
 	color: var(--gray-400);
+
+	font-weight: 500;
 	text-decoration: none;
 
-	border-radius: 2px;
+	border-radius: 6px;
+	background-color: none;
 
-	&:hover {
-		color: var(--gray-600);
-		background-color: var(--gray-100);
-	}
+	${({ $isActive }) =>
+		$isActive
+			? css`
+					color: var(--gray-800);
+					background-color: var(--gray-100);
+			  `
+			: css`
+					&:hover {
+						color: var(--gray-600);
+						background-color: var(--gray-50);
+					}
+			  `};
 `;
 
-const Label = styled.span`
-	@media (max-width: ${screenSize.laptop}) {
-		display: none;
-	}
-`;
+export const Item = ({ to, children, ...props }) => {
+	const { pathname } = useResolvedPath(to);
+	const isActive = useMatch(pathname);
 
-export const Item = ({ icon, children, ...props }) => {
 	return (
-		<StyledItem {...props}>
-			{icon}
-			<Label>{children}</Label>
+		<StyledItem to={to} $isActive={!!isActive} {...props}>
+			{children}
 		</StyledItem>
 	);
 };

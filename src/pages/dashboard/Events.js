@@ -6,10 +6,11 @@ import { useSession } from "../../contexts/SessionContext";
 import * as api from "../../utils/familiarApi";
 import { formatDate } from "../../utils/formatDate";
 
-import * as Button from "../../components/shared/Button";
+import { Button } from "../../components/shared/Button";
 import * as Icon from "../../components/shared/Icons";
 import * as Container from "../../components/shared/Container";
 import { Heading1, Paragraph } from "../../components/shared/Typography";
+import { Plus } from "phosphor-react";
 
 export const Events = () => {
 	const navigate = useNavigate();
@@ -30,10 +31,10 @@ export const Events = () => {
 		<>
 			<div className="flex items-end justify-between">
 				<Heading1>Eventi</Heading1>
-				<Button.Light onClick={() => navigate("/dashboard/create-event")}>
-					<Icon.Plus className="h-5 w-5" />
+				<Button onClick={() => navigate("/dashboard/create-event")}>
+					<Plus size={14} />
 					Aggiungi evento
-				</Button.Light>
+				</Button>
 			</div>
 			<hr />
 			<Container.Root>

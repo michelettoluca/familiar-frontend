@@ -1,35 +1,28 @@
-import styled from "styled-components";
+import clsx from "clsx";
+import { CaretDown } from "phosphor-react";
 
-export const Select = styled.select`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	column-gap: 0.5rem;
-
-	padding: 0.75rem;
-	width: ${({ fullWidth }) => (fullWidth ? "100%" : "fit-content")};
-
-	color: var(--gray-600);
-
-	background-color: white;
-
-	border: 1px solid var(--gray-300);
-	border-radius: var(--border-radius);
-
-	&::placeholder {
-		color: var(--gray-400);
-	}
-
-	&:hover {
-		filter: brightness(1.02);
-	}
-
-	&:active {
-		filter: brightness(0.98);
-	}
-
-	&:focus {
-		outline: 2px solid var(--gray-800);
-		outline-offset: 1px;
-	}
-`;
+export const Select = ({ fullWidth, className, children, ...props }) => {
+	const wrapperClass = clsx(
+		"relative",
+		fullWidth ? "w-full" : "w-fit",
+		className
+	);
+	return (
+		<div className={wrapperClass}>
+			<select
+				className="
+					appearance-none w-full py-2 px-3 text-gray-600 bg-white border border-gray-300 rounded-lg
+					placeholder:text-gray-400
+					focus:border-gray-600 focus:outline focus:outline-4 focus:outline-black/5
+				"
+				{...props}
+			>
+				{children}
+			</select>
+			<CaretDown
+				size={14}
+				className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+			/>
+		</div>
+	);
+};

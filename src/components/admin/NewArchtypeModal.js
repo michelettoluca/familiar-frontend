@@ -6,14 +6,13 @@ import { useMutation, useQueryClient } from "react-query";
 import * as api from "../../utils/familiarApi";
 import { playstyles } from "../../utils/constants";
 
-import * as Button from "../shared/Button";
-import * as Input from "../shared/Input";
+import { Button } from "../shared/Button";
+import { Input } from "../shared/Input";
 import * as Icon from "../shared/Icons";
 import { Select } from "../shared/Select";
 import { Modal } from "../shared/Modal";
 
 export const NewArchetypeModal = ({ close }) => {
-	// console.log("asd", ColorSvg);
 	const queryClient = useQueryClient();
 
 	const { mutate: createArchetype } = useMutation(api.createArchetype, {
@@ -49,7 +48,7 @@ export const NewArchetypeModal = ({ close }) => {
 				</div>
 				<hr />
 				<div>
-					<Input.Text
+					<Input
 						placeholder="Nome"
 						value={name}
 						onChange={(e) => setName(e.target.value)}
@@ -103,11 +102,12 @@ export const NewArchetypeModal = ({ close }) => {
 					</div>
 				</div>
 				<div>
-					<Button.Dark
+					<Button
+						variant="dark"
 						onClick={() => createArchetype({ name, playstyle, colors })}
 					>
 						Aggiungi archetipo
-					</Button.Dark>
+					</Button>
 				</div>
 			</div>
 		</Modal>

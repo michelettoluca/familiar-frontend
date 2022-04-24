@@ -5,7 +5,7 @@ import { useClickOutside } from "../../utils/hooks/useClickOutside";
 import * as api from "../../utils/familiarApi";
 import { formatDate } from "../../utils/formatDate";
 
-import * as Button from "../../components/shared/Button";
+import { Button } from "../../components/shared/Button";
 import * as Container from "../../components/shared/Container";
 import * as Icons from "../../components/shared/Icons";
 import { Heading2 } from "../../components/shared/Typography";
@@ -36,10 +36,10 @@ export const Seasons = () => {
 			{showModal && <NewSeasonModal hideModal={() => setShowModal(false)} />}
 			<div className="flex items-end justify-between">
 				<Heading2>Stagioni</Heading2>
-				<Button.Light onClick={() => setShowModal(true)}>
+				<Button onClick={() => setShowModal(true)}>
 					<Icons.Plus className="h-5 w-5" />
 					Aggiungi stagione
-				</Button.Light>
+				</Button>
 			</div>
 			<hr />
 			<Container.Root>

@@ -6,7 +6,6 @@ import { useSession } from "../contexts/SessionContext";
 import * as api from "../utils/familiarApi";
 
 import * as Main from "../components/shared/Main";
-import * as Icon from "../components/shared/Icons";
 import * as Navbar from "../components/shared/Navbar";
 
 export const Dashboard = () => {
@@ -18,8 +17,6 @@ export const Dashboard = () => {
 		{ enabled: !!user.leagueId }
 	);
 
-	if (status === "idle") return null;
-
 	if (status === "error") return <span>error</span>;
 
 	if (status === "loading") return <span>loading...</span>;
@@ -27,22 +24,12 @@ export const Dashboard = () => {
 	return (
 		<Main.Root>
 			<Navbar.Root>
-				<Navbar.Logo domain={league.tag} />
-				<Navbar.Item to="" icon={<Icon.Overview />}>
-					Home
-				</Navbar.Item>
-				<Navbar.Item to="players" icon={<Icon.UserList />}>
-					Giocatori
-				</Navbar.Item>
-				<Navbar.Item to="events" icon={<Icon.ListTree />}>
-					Eventi
-				</Navbar.Item>
-				<Navbar.Item
-					to="/dashboard/sign-in"
-					onClick={() => signOut()}
-					icon={<Icon.LogOut />}
-				>
-					<span className="hidden lg:block">Disconnettiti</span>
+				<Navbar.Logo>{league.name}</Navbar.Logo>
+				<Navbar.Item to="">Home</Navbar.Item>
+				<Navbar.Item to="players">Giocatori</Navbar.Item>
+				<Navbar.Item to="events">Eventi</Navbar.Item>
+				<Navbar.Item to="/dashboard/sign-in" onClick={signOut} $signOut>
+					Esci
 				</Navbar.Item>
 			</Navbar.Root>
 			<Main.Content>

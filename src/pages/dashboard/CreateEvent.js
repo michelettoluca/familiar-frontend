@@ -10,14 +10,15 @@ import { useSession } from "../../contexts/SessionContext";
 import * as api from "../../utils/familiarApi";
 import { getQueriesStatus } from "../../utils/getQueriesStatus";
 
-import * as Button from "../../components/shared/Button";
+import { Button } from "../../components/shared/Button";
 import * as Container from "../../components/shared/Container";
 import * as Icon from "../../components/shared/Icons";
-import * as Input from "../../components/shared/Input";
-import { Heading1, Heading2 } from "../../components/shared/Typography";
+import { Input } from "../../components/shared/Input";
+import * as T from "../../components/shared/Typography";
 import { Select } from "../../components/shared/Select";
 
 import { NewPlayerModal } from "../../components/dashbaord/NewPlayerModal";
+import { Hash, CaretLeft } from "phosphor-react";
 
 const CreateEventContext = React.createContext();
 
@@ -122,10 +123,10 @@ export const CreateEvent = () => {
 		<CreateEventContext.Provider value={contextValue}>
 			<div className="flex flex-col gap-y-2">
 				<Button.Light onClick={() => navigate(-1)}>
-					<Icon.ChevronUp className="-rotate-90 " />
+					<CaretLeft size={14} />
 					Indietro
 				</Button.Light>
-				<Heading1 className="mt-4">Nuovo evento</Heading1>
+				<T.Heading1 className="mt-4">Nuovo evento</T.Heading1>
 			</div>
 			<hr />
 			<Info />
@@ -150,14 +151,18 @@ const Info = () => {
 
 	return (
 		<div className="flex flex-col gap-y-4">
-			<Heading2>Informazioni generali</Heading2>
+			<T.Heading2>Informazioni generali</T.Heading2>
 			<Container.Root className="p-8 gap-4">
 				<div className="grid grid-cols-[30%_auto] items-start gap-x-4">
 					<div className="flex items-center gap-x-2">
-						<Icon.Hashtag className="h-5 w-5" />
+						<Hash size={14} />
 						<span className="font-medium">Tipo</span>
 					</div>
-					<Select value={type} onChange={(e) => setType(e.target.value)}>
+					<Select
+						value={type}
+						onChange={(e) => setType(e.target.value)}
+						$fullWidth
+					>
 						<option value="regular">Tappa regolare</option>
 						<option value="off_season">Evento one shot</option>
 					</Select>
@@ -169,10 +174,10 @@ const Info = () => {
 							<Icon.Tag className="h-5 w-5" />
 							<span className="font-medium">Nome</span>
 						</div>
-						<Input.Text
+						<Input
+							placeholder="Nome"
 							value={name}
 							onChange={(e) => setName(e.target.value)}
-							placeholder="Nome"
 						/>
 					</div>
 				)}
@@ -182,10 +187,11 @@ const Info = () => {
 						<Icon.Calendar className="h-5 w-5" />
 						<span className="font-medium">Data</span>
 					</div>
-					<Input.Date
+					<Input
+						type="date"
+						placeholder="Data"
 						value={date}
 						onChange={(e) => setDate(e.target.value)}
-						placeholder="Data"
 						fullWidth
 					/>
 				</div>
@@ -203,13 +209,11 @@ const PlayerSelection = () => {
 	const [showModal, setShowModal] = React.useState(false);
 
 	const filteredPlayers = players.filter((player) => {
-		const combinations = [
+		return [
 			player.firstName + " " + player.lastName,
 			player.lastName + " " + player.firstName,
-			player.identifier,
-		];
-
-		return combinations.some((combination) =>
+			player.username,
+		].some((combination) =>
 			combination
 				.toLowerCase()
 				.startsWith(serachValue.trim().replace(/\s\s+/g, " ").toLowerCase())
@@ -218,8 +222,8 @@ const PlayerSelection = () => {
 
 	const { currentPage, currentPageNumber, setCurrentPageNumber, pageCount } =
 		usePaginate({
-			pageSize: 10,
 			array: filteredPlayers,
+			pageSize: 10,
 		});
 
 	const pageIndexes = [...Array(pageCount).keys()];
@@ -229,26 +233,12 @@ const PlayerSelection = () => {
 			{showModal && <NewPlayerModal hideModal={() => setShowModal(false)} />}
 			<div className="flex flex-col gap-y-4">
 				<div className="flex items-end justify-between">
-					<Heading2>Selezione giocatori</Heading2>
-					<div className="relative">
-						<Input.Text
-							value={serachValue}
-							onChange={(e) => setSearchValue(e.target.value)}
-							placeholder="Nome giocatore"
-						/>
-						{serachValue ? (
-							<div
-								className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 z-0 cursor-pointer after:absolute after:content-[''] after:h-7 after:w-7 after:rounded-full after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 hover:after:bg-gray-100 after:-z-10"
-								onClick={() => setSearchValue("")}
-							>
-								<Icon.Close className="h-5 w-5" />
-							</div>
-						) : (
-							<div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
-								<Icon.Search className="h-5 w-5" />
-							</div>
-						)}
-					</div>
+					<T.Heading2>Selezione giocatori</T.Heading2>
+					<Input
+						placeholder="Nome giocatore"
+						value={serachValue}
+						onChange={(e) => setSearchValue(e.target.value)}
+					/>
 				</div>
 				<Container.Root>
 					{currentPage.length !== 0 ? (
@@ -262,7 +252,10 @@ const PlayerSelection = () => {
 										"hover:bg-gray-50": !isPlayerSelected(player.id),
 									}
 								)}
-								onClick={() => toggleSelection(player)}
+								onClick={() => {
+									toggleSelection(player);
+									setSearchValue("");
+								}}
 							>
 								<div>
 									{player.firstName} {player.lastName}{" "}
@@ -340,7 +333,7 @@ const Results = () => {
 
 	return (
 		<div className="flex flex-col gap-y-4">
-			<Heading2>Inserimento risultati</Heading2>
+			<T.Heading2>Inserimento risultati</T.Heading2>
 			<Container.Root>
 				{selectedPlayers.length !== 0 ? (
 					selectedPlayers.map((player) => (
@@ -437,10 +430,10 @@ const Archetype = ({ value, onChange, error }) => {
 			{show && (
 				<>
 					<div className="relative border-y border-y-gray-200 bg-gray-50">
-						<Input.Text
+						<Input
+							placeholder="Nome archetipo"
 							value={searchValue}
 							onChange={(e) => setSearchValue(e.target.value)}
-							placeholder="Nome archetipo"
 							autoFocus
 						/>
 						<Icon.Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
@@ -478,10 +471,10 @@ const Score = ({ value, onChange, error }) => {
 	};
 
 	return (
-		<Input.Text
+		<Input
+			placeholder="Punteggio"
 			value={value || ""}
 			onChange={handleChange}
-			placeholder="Punteggio"
 		/>
 	);
 };

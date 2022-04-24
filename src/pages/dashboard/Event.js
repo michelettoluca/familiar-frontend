@@ -7,7 +7,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import * as api from "../../utils/familiarApi";
 import { formatDate } from "../../utils/formatDate";
 
-import * as Button from "../../components/shared/Button";
+import { Button } from "../../components/shared/Button";
 import * as Icon from "../../components/shared/Icons";
 import * as Container from "../../components/shared/Container";
 import { Heading1 } from "../../components/shared/Typography";
@@ -39,10 +39,10 @@ export const Event = () => {
 					eventId={eventId}
 				/>
 			)}
-			<Button.Light onClick={() => navigate("/dashboard/events")}>
+			<Button onClick={() => navigate("/dashboard/events")}>
 				<Icon.ChevronUp className="-rotate-90 " />
 				Eventi
-			</Button.Light>
+			</Button>
 			<div className="flex justify-between items-end max-w-5xl gap-x-4">
 				<div className="flex flex-col gap-y-1">
 					<div className="flex gap-x-2 items-baseline">
@@ -53,12 +53,13 @@ export const Event = () => {
 					</div>
 				</div>
 
-				<Button.Red
+				<Button
+					variant="dark"
 					iconBefore={<Icon.Trash className="h-5 w-5" />}
 					onClick={() => setShowModal(true)}
 				>
 					Rimuovi evento
-				</Button.Red>
+				</Button>
 			</div>
 			<hr />
 			<div className="flex flex-col max-w-5xl gap-4">

@@ -17,7 +17,7 @@ import { Dashboard } from "./layouts/Dashboard";
 import { Admin } from "./layouts/Admin";
 
 const queryClient = new QueryClient({
-	defaultOptions: { queries: { refetchOnMount: true } },
+	defaultOptions: { queries: { refetchOnMount: false } },
 });
 
 ReactDOM.render(

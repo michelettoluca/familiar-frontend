@@ -5,7 +5,7 @@ import { useClickOutside } from "../../utils/hooks/useClickOutside";
 
 import * as api from "../../utils/familiarApi";
 
-import * as Button from "../shared/Button";
+import { Button } from "../shared/Button";
 import { Modal } from "../shared/Modal";
 
 export const DeletePlayerModal = ({ hideModal, player }) => {
@@ -44,9 +44,9 @@ export const DeletePlayerModal = ({ hideModal, player }) => {
 			>
 				Annulla
 			</span>
-			<Button.Red onClick={() => deletePlayer({ playerId: player.id })}>
+			<Button onClick={() => deletePlayer({ playerId: player.id })}>
 				Rimuovi
-			</Button.Red>
+			</Button>
 		</Modal>
 	);
 };

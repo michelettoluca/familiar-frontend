@@ -4,8 +4,8 @@ import { useSession } from "../../contexts/SessionContext";
 
 import { role } from "../../utils/constants";
 
-import * as Input from "../../components/shared/Input";
-import * as Button from "../../components/shared/Button";
+import { Input } from "../../components/shared/Input";
+import { Button } from "../../components/shared/Button";
 import * as T from "../../components/shared/Typography";
 
 export const SignIn = () => {
@@ -36,23 +36,20 @@ export const SignIn = () => {
 			>
 				<div className="flex flex-col p-8 w-96 bg-white shadow-sm rounded-sm gap-2">
 					<T.Heading4>Admin</T.Heading4>
-					<Input.Text
-						type="text"
+					<Input
 						value={username}
 						onChange={(e) => setUsername(e.target.value)}
 						fullWidth
 					/>
-					<Input.Password
-						type="password"
-						name="password"
+					<Input
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 						fullWidth
 					/>
 
-					<Button.Dark onClick={handleSignIn} fullWidth>
+					<Button variant="dark" onClick={handleSignIn} fullWidth>
 						Accedi
-					</Button.Dark>
+					</Button>
 				</div>
 			</form>
 		</div>

@@ -4,8 +4,8 @@ import { useClickOutside } from "../../utils/hooks/useClickOutside";
 
 import * as api from "../../utils/familiarApi";
 
-import * as Button from "../shared/Button";
-import * as Input from "../shared/Input";
+import { Button } from "../shared/Button";
+import { Input } from "../shared/Input";
 import { Modal } from "../shared/Modal";
 
 export const NewLeagueModal = ({ hideModal }) => {
@@ -43,31 +43,33 @@ export const NewLeagueModal = ({ hideModal }) => {
 			</Modal.Header>
 			<Modal.Divider />
 			<Modal.Content className="flex flex-col gap-y-2">
-				<Input.Text
+				<Input
 					placeholder="Nome"
 					value={name}
 					onChange={(e) => setName(e.target.value)}
 				/>
-				<Input.Text
+				<Input
 					placeholder="Tag"
 					value={tag}
 					onChange={(e) => setTag(e.target.value)}
 				/>
-				<Input.Text
+				<Input
+					type="password"
 					placeholder="Password"
 					value={password}
-					type="password"
 					onChange={(e) => setPassword(e.target.value)}
 				/>
-				<Input.Text
+				<Input
+					type="password"
 					placeholder="Confirm password"
 					value={confirmPassword}
-					type="password"
 					onChange={(e) => setConfirmPassword(e.target.value)}
 				/>
 			</Modal.Content>
 			<Modal.Footer>
-				<Button.Dark onClick={handleCreateLeague}>Aggiungi lega</Button.Dark>
+				<Button variant="dark" onClick={handleCreateLeague}>
+					Aggiungi lega
+				</Button>
 			</Modal.Footer>
 		</Modal.Root>
 	);

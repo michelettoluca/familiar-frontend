@@ -4,7 +4,7 @@ import { useClickOutside } from "../../utils/hooks/useClickOutside";
 
 import * as api from "../../utils/familiarApi";
 
-import * as Button from "../../components/shared/Button";
+import { Button } from "../../components/shared/Button";
 import * as Container from "../../components/shared/Container";
 import * as Icon from "../../components/shared/Icons";
 import { Heading1 } from "../../components/shared/Typography";
@@ -33,12 +33,12 @@ export const Leagues = () => {
 			{showModal && <NewLeagueModal hideModal={() => setShowModal(false)} />}
 			<div className="flex items-end justify-between">
 				<Heading1>Leghe</Heading1>
-				<Button.Light
+				<Button
 					iconBefore={<Icon.Plus className="h-5 w-5" />}
 					onClick={() => setShowModal(true)}
 				>
 					Aggiungi lega
-				</Button.Light>
+				</Button>
 			</div>
 			<hr />
 			<Container.Root>

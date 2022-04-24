@@ -1,17 +1,14 @@
 import styled from "styled-components";
-import { screenSize } from "../../utils/constants";
 
 export const Root = styled.div`
-	display: flex;
-	height: 100vh;
-	background-color: var(--gray-50);
+	min-height: 100vh;
+	background-color: var(--white);
 `;
 
 export const Content = styled.div`
-	flex-grow: 1;
-
 	padding: 2rem;
 
 	overflow-y: auto;
-	max-width: ${screenSize.laptop};
+	max-width: 1200px;
+	margin: 0 auto;
 `;

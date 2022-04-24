@@ -24,6 +24,7 @@ export const Heading4 = styled(Heading)`
 
 export const Heading5 = styled(Heading)`
 	font-size: 1rem;
+	margin-bottom: 1rem;
 `;
 
 export const Heading6 = styled(Heading)`

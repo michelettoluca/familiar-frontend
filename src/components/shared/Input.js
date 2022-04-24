@@ -1,38 +1,13 @@
-import styled from "styled-components";
+import clsx from "clsx";
 
-const Input = styled.input`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	padding: 0.75rem;
-	width: ${({ fullWidth }) => (fullWidth ? "100%" : "fit-content")};
-
-	border: 1px solid var(--gray-300);
-	border-radius: var(--border-radius);
-
-	color: var(--gray-600);
-
-	&::placeholder {
-		color: var(--gray-400);
-	}
-
-	&:hover {
-		filter: brightness(1.02);
-	}
-
-	&:active {
-		filter: brightness(0.98);
-	}
-
-	&:focus {
-		outline: 2px solid var(--gray-800);
-		outline-offset: 1px;
-	}
-`;
-
-export const Password = styled(Input).attrs({ type: "password" })``;
-
-export const Text = styled(Input).attrs({ type: "text" })``;
-
-export const Date = styled(Input).attrs({ type: "date" })``;
+export const Input = ({ type = "text", className, ...props }) => {
+	const inputClass = clsx(
+		`
+		appearance-none w-full py-2 px-3 text-gray-600 bg-white border border-gray-300 rounded-lg
+		placeholder:text-gray-400
+		focus:border-gray-600 focus:outline focus:outline-4 outline-black/5
+		`,
+		className
+	);
+	return <input type={type} className={inputClass} {...props} />;
+};

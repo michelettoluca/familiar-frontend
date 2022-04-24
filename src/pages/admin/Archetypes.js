@@ -6,7 +6,7 @@ import { useModal } from "../../components/shared/Modal";
 
 import * as api from "../../utils/familiarApi";
 
-import * as Button from "../../components/shared/Button";
+import { Button } from "../../components/shared/Button";
 import * as Container from "../../components/shared/Container";
 import * as Icon from "../../components/shared/Icons";
 import { Heading1 } from "../../components/shared/Typography";
@@ -52,10 +52,10 @@ export const Archetypes = () => {
 			{isModalOpen && <NewArchetypeModal close={closeModal} />}
 			<div className="flex items-end justify-between">
 				<Heading1>Archetipi</Heading1>
-				<Button.Light onClick={openModal}>
+				<Button onClick={openModal}>
 					<Icon.Plus className="h-5 w-5" />
 					Aggiungi archetipo
-				</Button.Light>
+				</Button>
 			</div>
 			<hr />
 			<Container.Root>

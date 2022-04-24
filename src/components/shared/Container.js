@@ -1,9 +1,7 @@
 import styled from "styled-components";
 
 export const Root = styled.div`
-	padding: 1.25rem 1rem;
-
-	max-width: ${({ maxWidth }) => maxWidth};
+	padding: 1.5rem;
 
 	background-color: white;
 

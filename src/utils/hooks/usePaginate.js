@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 
-export const usePaginate = (array, pageSize) => {
+export const usePaginate = ({ array, pageSize }) => {
 	const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
 	const pageCount = Math.ceil(array.length / pageSize);

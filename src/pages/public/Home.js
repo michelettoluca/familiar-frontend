@@ -1,6 +1,6 @@
 import React from "react";
 
-import * as Input from "../../components/shared/Input";
+import { Input } from "../../components/shared/Input";
 import { Select } from "../../components/shared/Select";
 import { Heading1 } from "../../components/shared/Typography";
 
@@ -13,7 +13,7 @@ export const Home = () => {
 				<option>Lega Pauper Brescia</option>
 				<option>Lega Pauper Lecco</option>
 			</Select>
-			<Input.Date fullWidth />
+			<Input fullWidth />
 		</div>
 	);
 };

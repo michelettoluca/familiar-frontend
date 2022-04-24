@@ -5,7 +5,7 @@ import { useClickOutside } from "../../utils/hooks/useClickOutside";
 
 import * as api from "../../utils/familiarApi";
 
-import * as Button from "../shared/Button";
+import { Button } from "../shared/Button";
 import { Modal } from "../shared/Modal";
 
 export const DeleteEventModal = ({ hideModal, eventId }) => {
@@ -33,9 +33,7 @@ export const DeleteEventModal = ({ hideModal, eventId }) => {
 				</Modal.Description>
 			</Modal.Header>
 			<Modal.Footer>
-				<Button.Red onClick={() => deleteEvent({ eventId })}>
-					Elimina evento
-				</Button.Red>
+				<Button onClick={() => deleteEvent({ eventId })}>Elimina evento</Button>
 			</Modal.Footer>
 		</Modal.Root>
 	);

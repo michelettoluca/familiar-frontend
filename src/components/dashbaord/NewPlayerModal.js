@@ -6,10 +6,10 @@ import { useSession } from "../../contexts/SessionContext";
 
 import * as api from "../../utils/familiarApi";
 
-import * as Button from "../shared/Button";
+import { Button } from "../shared/Button";
 import * as Container from "../shared/Container";
 import * as Divider from "../shared/Divider";
-import * as Input from "../shared/Input";
+import { Input } from "../shared/Input";
 import { Modal } from "../shared/Modal";
 
 export const NewPlayerModal = ({ hideModal }) => {
@@ -53,21 +53,21 @@ export const NewPlayerModal = ({ hideModal }) => {
 				Registra giocatore Inserisci le informazioni del nuovo giocatore.
 				<Divider.Horizontal />
 				{error && error.msg}
-				<Input.Text
+				<Input
 					placeholder="Nome"
-					value={playerInfo.firstName}
 					name="firstName"
+					value={playerInfo.firstName}
 					onChange={setPlayerInfo}
 				/>
-				<Input.Text
+				<Input
 					placeholder="Cognome"
-					value={playerInfo.lastName}
 					name="lastName"
+					value={playerInfo.lastName}
 					onChange={setPlayerInfo}
 				/>
-				<Button.Dark onClick={handleRegisterPlayer}>
+				<Button variant="dark" onClick={handleRegisterPlayer}>
 					Aggiungi giocatore
-				</Button.Dark>
+				</Button>
 			</Container.Root>
 		</Modal>
 	);

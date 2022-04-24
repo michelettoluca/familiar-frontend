@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import { Spinner } from "phosphor-react";
 
 import React from "react";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -10,58 +10,9 @@ import jwtDecode from "jwt-decode";
 import * as api from "../../utils/familiarApi";
 import { role } from "../../utils/constants";
 
-import * as Input from "../../components/shared/Input";
-import * as Button from "../../components/shared/Button";
-import * as Container from "../../components/shared/Container";
-import * as T from "../../components/shared/Typography";
-
+import { Input } from "../../components/shared/Input";
+import { Button } from "../../components/shared/Button";
 import { Select } from "../../components/shared/Select";
-
-const StyledContainer = styled(Container.Root)`
-	position: fixed;
-	top: 50%;
-	left: 50%;
-
-	display: flex;
-	flex-direction: column;
-
-	width: 320px;
-
-	transform: translate(-50%, -50%);
-
-	border-radius: 8px;
-
-	@media (max-width: 30rem) {
-		width: 100%;
-		height: 100%;
-		border: 0px;
-		justify-content: center;
-		border-radius: 0;
-	}
-`;
-
-const StyledHeader = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-
-	margin: 1rem 0 2rem;
-
-	text-align: center;
-`;
-
-const FormWrapper = styled.div`
-	display: flex;
-	flex-direction: column;
-
-	gap: 1rem;
-`;
-
-const Error = styled.div`
-	background-color: var(--red-500);
-	padding: 0.75rem;
-	color: white;
-`;
 
 export const SignIn = () => {
 	const navigate = useNavigate();
@@ -71,9 +22,7 @@ export const SignIn = () => {
 	const { data: leagues, status } = useQuery(
 		"leagues",
 		() => api.getLeagues(),
-		{
-			onSuccess: (leagues) => setUsername(leagues?.[0]?.tag),
-		}
+		{ onSuccess: (leagues) => setUsername(leagues?.[0].tag) }
 	);
 
 	const { mutate: signIn } = useMutation(api.signIn, {
@@ -86,7 +35,7 @@ export const SignIn = () => {
 		},
 	});
 
-	const [username, setUsername] = React.useState("");
+	const [username, setUsername] = React.useState(leagues?.[0].tag || "");
 	const [password, setPassword] = React.useState("");
 
 	const [error, setError] = React.useState("");
@@ -95,42 +44,64 @@ export const SignIn = () => {
 		signIn({ username, password });
 	};
 
-	if (status === "error") return <span>error</span>;
+	if (status === "loading")
+		return <Spinner className="animate-spin" size={24} />;
 
-	if (status === "loading") return <span>loading...</span>;
+	if (status === "error") return <span>error</span>;
 
 	if (user?.role === role.ORGANIZER)
 		return <Navigate to="/dashboard" replace={true} />;
 
 	return (
-		<StyledContainer>
-			<StyledHeader>
-				<T.Heading2>Familiar</T.Heading2>
-				<T.Paragraph>Dashboard</T.Paragraph>
-			</StyledHeader>
-			<FormWrapper>
-				{error && <Error>{error}</Error>}
+		<div
+			className="
+			border-gray-200 p-6 
+			sm:mx-auto sm:w-96 sm:rounded-lg sm:border sm:shadow-xl md:mt-16
+		"
+		>
+			<h1 className="text-2xl font-bold text-gray-800">Familiar</h1>
+			<span className="color mb-4 block font-medium text-gray-400">
+				Dashboard
+			</span>
+			<form
+				onSubmit={(e) => {
+					e.preventDefault();
+					handleSignIn();
+				}}
+			>
+				<span className="mb-1 block text-gray-400">Lega</span>
 				<Select
+					className="mb-4"
 					value={username}
 					onChange={(e) => setUsername(e.target.value)}
 					fullWidth
 				>
+					<option disabled>Seleziona una lega</option>
 					{leagues.map((league) => (
 						<option key={league.id} value={league.tag}>
 							{league.name}
 						</option>
 					))}
 				</Select>
-				<Input.Password
+				<span className="mb-1 block text-gray-400">Password</span>
+				<Input
+					type="password"
+					className="mb-4"
 					value={password}
 					placeholder="Password"
 					onChange={(e) => setPassword(e.target.value)}
 					fullWidth
 				/>
-				<Button.Dark onClick={handleSignIn} fullWidth>
+				{error && <span className="font-medium text-red-700">{error}</span>}
+				<Button
+					className="mt-6"
+					onClick={handleSignIn}
+					variant="dark"
+					fullWidth
+				>
 					Accedi
-				</Button.Dark>
-			</FormWrapper>
-		</StyledContainer>
+				</Button>
+			</form>
+		</div>
 	);
 };
