@@ -20,9 +20,14 @@ export const NewArchetypeModal = ({ close }) => {
 			queryClient.invalidateQueries("archetypes");
 			close();
 		},
+		onError: (error) => {
+			console.log(error.response.data.error);
+			setError(error);
+		},
 	});
 
 	const [name, setName] = React.useState("");
+	const [error, setError] = React.useState(null);
 	const [playstyle, setPlaystyle] = React.useState(playstyles.AGGRO);
 	const [colors, setColros] = React.useState([]);
 
@@ -65,36 +70,36 @@ export const NewArchetypeModal = ({ close }) => {
 						<option value={playstyles.MIDRANGE}>Midrange</option>
 						<option value={playstyles.PRISON}>Prison</option>
 					</Select>
-					<div className="flex justify-between py-2 px-3 rounded-sm border border-gray-300">
+					<div className="flex justify-between rounded-sm border border-gray-300 py-2 px-3">
 						<span>Colori</span>
 						<div className="flex gap-3">
 							<Icon.W
 								className={classNames(colorClass, {
-									"grayscale opacity-50": !isColorSelected("W"),
+									"opacity-50 grayscale": !isColorSelected("W"),
 								})}
 								onClick={() => toggleColorSelection("W")}
 							/>
 							<Icon.U
 								className={classNames(colorClass, {
-									"grayscale opacity-50": !isColorSelected("U"),
+									"opacity-50 grayscale": !isColorSelected("U"),
 								})}
 								onClick={() => toggleColorSelection("U")}
 							/>
 							<Icon.B
 								className={classNames(colorClass, {
-									"grayscale opacity-50": !isColorSelected("B"),
+									"opacity-50 grayscale": !isColorSelected("B"),
 								})}
 								onClick={() => toggleColorSelection("B")}
 							/>
 							<Icon.R
 								className={classNames(colorClass, {
-									"grayscale opacity-50": !isColorSelected("R"),
+									"opacity-50 grayscale": !isColorSelected("R"),
 								})}
 								onClick={() => toggleColorSelection("R")}
 							/>
 							<Icon.G
 								className={classNames(colorClass, {
-									"grayscale opacity-50": !isColorSelected("G"),
+									"opacity-50 grayscale": !isColorSelected("G"),
 								})}
 								onClick={() => toggleColorSelection("G")}
 							/>

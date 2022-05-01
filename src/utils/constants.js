@@ -3,7 +3,7 @@ export const role = {
 	ORGANIZER: "ORGANIZER",
 };
 
-export const eventTypes = {
+export const eventType = {
 	REGULAR: "regular",
 	OFF_SEASON: "off_season",
 };
@@ -16,7 +16,7 @@ export const colors = {
 	GREEN: "G",
 };
 
-export const playstyles = {
+const playstyle = {
 	AGGRO: "aggro",
 	CONTROL: "control",
 	COMBO: "combo",
@@ -35,7 +35,7 @@ export const screenSize = {
 	desktop: "2560px",
 };
 
-const eventType = {
+export const eventTypes = {
 	REGULAR: "REGULAR",
 	OFF_SEASON: "OFF_SEASON",
 };
@@ -48,7 +48,7 @@ const color = {
 	GREEN: "G",
 };
 
-const playstyle = {
+export const playstyles = {
 	AGGRO: "AGGRO",
 	CONTROL: "CONTROL",
 	COMBO: "COMBO",

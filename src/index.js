@@ -49,14 +49,14 @@ ReactDOM.render(
 								<Route path="players" element={<DashboardPages.Players />}>
 									<Route path=":playerId" element={<DashboardPages.Player />} />
 								</Route>
-								<Route path="events">
-									<Route index element={<DashboardPages.Events />} />
-									<Route path=":eventId" element={<DashboardPages.Event />} />
+								<Route path="events" element={<DashboardPages.Events />}>
+									<Route path=":eventId" element={<DashboardPages.Event />} />{" "}
 								</Route>
 								<Route
 									path="create-event"
 									element={<DashboardPages.CreateEvent />}
 								/>
+
 								<Route path="*" element={<span>no match</span>} />
 							</Route>
 

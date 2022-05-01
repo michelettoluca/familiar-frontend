@@ -1,5 +1,6 @@
+import clsx from "clsx";
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { useSession } from "../../contexts/SessionContext";
 
@@ -7,13 +8,32 @@ import * as api from "../../utils/familiarApi";
 import { formatDate } from "../../utils/formatDate";
 
 import { Button } from "../../components/shared/Button";
-import * as Icon from "../../components/shared/Icons";
-import * as Container from "../../components/shared/Container";
-import { Heading1, Paragraph } from "../../components/shared/Typography";
-import { Plus } from "phosphor-react";
+import { Crown, Plus, UserList } from "phosphor-react";
 
 export const Events = () => {
 	const navigate = useNavigate();
+	return (
+		<div className="grid grid-cols-[368px_auto]">
+			<div className="h-fit rounded-lg border border-gray-200 bg-gray-50 p-6">
+				<span className="mb-6 block text-base font-medium text-gray-600">
+					Eventi
+				</span>
+				<Button
+					className="mb-4 border-dashed bg-transparent py-5"
+					onClick={() => navigate("/dashboard/create-event")}
+					fullWidth
+				>
+					<Plus /> Aggiungi un altro evento
+				</Button>
+
+				<EventList />
+			</div>
+			<Outlet />
+		</div>
+	);
+};
+
+const EventList = () => {
 	const { user } = useSession();
 
 	const { data: events, status } = useQuery(
@@ -28,65 +48,49 @@ export const Events = () => {
 	if (status === "loading") return <span>loading...</span>;
 
 	return (
-		<>
-			<div className="flex items-end justify-between">
-				<Heading1>Eventi</Heading1>
-				<Button onClick={() => navigate("/dashboard/create-event")}>
-					<Plus size={14} />
-					Aggiungi evento
-				</Button>
-			</div>
-			<hr />
-			<Container.Root>
-				{events?.length !== 0 ? (
-					events?.map((event) => <Event data={event} />)
-				) : (
-					<div className="flex items-center justify-between px-8 py-5">
-						<Paragraph className="text-gray-400">
-							Nessun evento trovato
-						</Paragraph>
-					</div>
-				)}
-			</Container.Root>
-		</>
+		<div className="flex h-96 flex-col gap-2 overflow-auto">
+			{events.length !== 0
+				? events.map((event) => <Event data={event} />)
+				: null}
+		</div>
 	);
 };
 
-const Event = ({ data: event }) => {
-	const { player } = event.winner;
+const Event = ({ data: { id, name, date, results } }) => {
+	const { eventId } = useParams();
 
-	const fullName = player
-		? player.firstName + " " + player.lastName
-		: "Account eliminato";
+	const winnerFullName =
+		results[0].player.firstName + " " + results[0].player.lastName;
+
+	const playerCount = results.length;
+
+	const isActive = (eId) => eId === eventId;
 
 	return (
-		<div
-			key={event.id}
-			className="flex items-start justify-between px-8 py-5 last:border-b-0 border-b border-b-gray-200"
+		<Link
+			className={clsx(
+				"flex cursor-pointer items-center justify-between rounded-lg border border-gray-200 p-4",
+				isActive(id) && "bg-white shadow-sm"
+			)}
+			key={id}
+			to={`${id}`}
+			$isActive={isActive(id)}
 		>
-			<div className="flex flex-col gap-1">
-				<Link
-					to={`${event.id}`}
-					className="font-medium hover:underline decoration-2 cursor-pointer"
-				>
-					{event.name}
-				</Link>
+			<div>
+				<span className="block font-medium text-gray-600">{name}</span>
+				<span className="text-xs text-gray-400">{formatDate(date)}</span>
+			</div>
 
-				<div className="flex text-gray-400 gap-x-1">
-					<Icon.Calendar className="h-5 w-5" />
-					{formatDate(event.date)}
+			<div className="flex flex-col items-end">
+				<div className="flex items-center gap-1.5 text-gray-400">
+					<span className="text-xs">{winnerFullName}</span>
+					<Crown size={18} />
+				</div>
+				<div className="flex items-center gap-1.5 text-gray-400">
+					<span className="text-xs">{playerCount}</span>
+					<UserList size={18} />
 				</div>
 			</div>
-			<div className="flex flex-col items-end shrink-0 gap-1">
-				<div className="flex text-gray-400 gap-x-1">
-					<Paragraph className="text-gray-400">{fullName}</Paragraph>
-					<Icon.Crown className="h-5 w-5" />
-				</div>
-				<div className="flex text-gray-400 gap-x-1">
-					{event.playerCount}
-					<Icon.User className="h-5 w-5" />
-				</div>
-			</div>
-		</div>
+		</Link>
 	);
 };

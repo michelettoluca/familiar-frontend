@@ -1,36 +1,12 @@
 import React from "react";
+
 import { Link, useParams } from "react-router-dom";
-import { useQueries, useQuery } from "react-query";
-import { useModal } from "../../components/shared/Modal";
+import { useQueries } from "react-query";
 
 import * as api from "../../utils/familiarApi";
 import { formatDate } from "../../utils/formatDate";
 
-import * as Button from "../../components/shared/Button";
-import * as Icon from "../../components/shared/Icons";
-import * as Container from "../../components/shared/Container";
-import * as T from "../../components/shared/Typography";
-
-import { DeletePlayerModal } from "../../components/dashbaord/DeletePlayerModal";
-import styled from "styled-components";
-
-const StyledPlayer = styled.div`
-	display: flex;
-`;
-
-const queryStatus = (status, { onLoading, onError, onSuccess }) => {
-	console.log(status);
-	switch (status) {
-		case "loading":
-			return onLoading;
-		case "error":
-			return onError;
-		case "success":
-			return onSuccess;
-		default:
-			return null;
-	}
-};
+import { CalendarBlank, Cards, Trophy } from "phosphor-react";
 
 export const Player = () => {
 	const { playerId } = useParams();
@@ -47,46 +23,53 @@ export const Player = () => {
 	]);
 
 	return (
-		<StyledPlayer>
+		<div>
 			{player.status === "success" && (
 				<>
-					<T.Heading2>
+					<span>
 						{player.data.firstName} {player.data.lastName}
-					</T.Heading2>
+					</span>
 					<span>{player.data.username}</span>
 				</>
 			)}
 
 			{player.status === "success" &&
-				events.data?.map((event) => (
-					<div
-						key={event.id}
-						className="flex items-center justify-between px-8 py-5 last:border-b-0 border-b border-b-gray-200"
-					>
-						<div className="flex flex-col  gap-1">
-							<Link
-								to={`/dashboard/events/${event.id}`}
-								className="font-medium hover:underline decoration-2 cursor-pointer"
-							>
-								{event.name}
-							</Link>
-							<div className="flex items-center text-gray-400 gap-x-1">
-								<Icon.Calendar className="h-5 w-5" />
-								{formatDate(event.date)}
-							</div>
-						</div>
-						<div className="flex flex-col items-end shrink-0 gap-1">
-							<div className="flex text-gray-400 gap-x-1">
-								{/* {getPlayerResult(event).score} */}
-								<Icon.Trophy className="h-5 w-5" />
-							</div>
-							<div className="flex text-gray-400 gap-x-1">
-								{/* {getPlayerResult(event).archetype.name} */}
-								<Icon.Card className="h-5 w-5" />
-							</div>
-						</div>
-					</div>
-				))}
-		</StyledPlayer>
+				events.data?.map((event) => <Event data={event} />)}
+		</div>
+	);
+};
+
+const Event = ({ data: { id, name, date, results } }) => {
+	const { playerId } = useParams();
+
+	const result = results.find(({ player }) => player.id === playerId);
+
+	const score = result.score;
+	const archetype = result.archetype;
+
+	return (
+		<Link
+			key={id}
+			to={`/dashboard/events/${id}`}
+			className="flex cursor-pointer items-center justify-between border-b border-b-gray-200 px-8 py-5 last:border-b-0"
+		>
+			<div className="flex flex-col  gap-1">
+				<div className="font-medium">{name}</div>
+				<div className="flex items-center gap-x-1 text-gray-400">
+					<CalendarBlank size={18} />
+					{formatDate(date)}
+				</div>
+			</div>
+			<div className="flex shrink-0 flex-col items-end gap-1">
+				<div className="flex gap-x-1 text-gray-400">
+					{score}
+					<Trophy size={18} />
+				</div>
+				<div className="flex gap-x-1 text-gray-400">
+					{archetype.name}
+					<Cards size={18} />
+				</div>
+			</div>
+		</Link>
 	);
 };

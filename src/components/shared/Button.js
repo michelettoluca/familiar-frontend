@@ -14,7 +14,7 @@ export const Button = ({
 		`,
 		fullWidth ? "w-full" : "w-fit",
 		variant === "dark" && "text-white  bg-gray-700",
-		variant === "light" && "text-white  bg-gray-800",
+		variant === "light" && "text-gray-600  bg-white border border-gray-300",
 		className
 	);
 

@@ -32,9 +32,9 @@ export const Dashboard = () => {
 					Esci
 				</Navbar.Item>
 			</Navbar.Root>
-			<Main.Content>
+			<div className="mx-auto max-w-7xl px-4 py-8">
 				<Outlet />
-			</Main.Content>
+			</div>
 		</Main.Root>
 	);
 };

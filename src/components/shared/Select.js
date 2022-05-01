@@ -11,7 +11,7 @@ export const Select = ({ fullWidth, className, children, ...props }) => {
 		<div className={wrapperClass}>
 			<select
 				className="
-					appearance-none w-full py-2 px-3 text-gray-600 bg-white border border-gray-300 rounded-lg
+					w-full appearance-none rounded-lg border border-gray-300 bg-white py-1.5 px-3 pr-8 text-gray-600
 					placeholder:text-gray-400
 					focus:border-gray-600 focus:outline focus:outline-4 focus:outline-black/5
 				"
@@ -21,7 +21,7 @@ export const Select = ({ fullWidth, className, children, ...props }) => {
 			</select>
 			<CaretDown
 				size={14}
-				className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+				className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2"
 			/>
 		</div>
 	);

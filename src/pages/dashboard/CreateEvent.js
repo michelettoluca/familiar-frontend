@@ -1,9 +1,8 @@
-import classNames from "classnames";
+import clsx from "clsx";
 
 import React from "react";
 import { useMutation, useQueries, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
-import { usePaginate } from "../../utils/hooks/usePaginate";
 import { useClickOutside } from "../../utils/hooks/useClickOutside";
 import { useSession } from "../../contexts/SessionContext";
 
@@ -11,14 +10,13 @@ import * as api from "../../utils/familiarApi";
 import { getQueriesStatus } from "../../utils/getQueriesStatus";
 
 import { Button } from "../../components/shared/Button";
-import * as Container from "../../components/shared/Container";
-import * as Icon from "../../components/shared/Icons";
 import { Input } from "../../components/shared/Input";
-import * as T from "../../components/shared/Typography";
 import { Select } from "../../components/shared/Select";
 
 import { NewPlayerModal } from "../../components/dashbaord/NewPlayerModal";
-import { Hash, CaretLeft } from "phosphor-react";
+
+import { CaretLeft, Check, DotsThree } from "phosphor-react";
+import { eventTypes } from "../../utils/constants";
 
 const CreateEventContext = React.createContext();
 
@@ -36,6 +34,10 @@ export const CreateEvent = () => {
 			queryKey: "archetypes",
 			queryFn: () => api.getArchetypes(),
 		},
+		{
+			queryKey: "seasons",
+			queryFn: () => api.getSeasons(),
+		},
 	]);
 
 	const status = getQueriesStatus(queries);
@@ -48,9 +50,10 @@ export const CreateEvent = () => {
 	});
 
 	const [name, setName] = React.useState("");
-	const [type, setType] = React.useState("regular");
+	const [type, setType] = React.useState(eventTypes.REGULAR);
 	const [date, setDate] = React.useState("");
 	const [selectedPlayers, setSelectedPlayers] = React.useState([]);
+	const [seasonId, setSeasonId] = React.useState("");
 	const [errorMessage, setErrorMessage] = React.useState("");
 
 	if (status === "idle") return null;
@@ -59,7 +62,7 @@ export const CreateEvent = () => {
 
 	if (status === "loading") return <span>loading...</span>;
 
-	const [{ data: players }, { data: archetypes }] = queries;
+	const [{ data: players }, { data: archetypes }, { data: seasons }] = queries;
 
 	const isPlayerSelected = (id) => selectedPlayers.find((p) => p.id === id);
 
@@ -71,9 +74,19 @@ export const CreateEvent = () => {
 		);
 
 	const submit = async () => {
+		console.log({
+			date,
+			name,
+			selectedPlayers,
+			archetypes,
+			players,
+			type,
+			seasons,
+			seasonId,
+		});
 		const errors = [];
 
-		if (!date || (type === "off_season" && !name)) errors.push("info");
+		if (!date || (type === eventTypes.OFF_SEASON && !name)) errors.push("info");
 
 		for (const selectedPlayer of selectedPlayers) {
 			if (!selectedPlayer?.archetype || !selectedPlayer?.score) {
@@ -82,17 +95,11 @@ export const CreateEvent = () => {
 			}
 		}
 
-		let _errorMessage = "Compila i campi in ";
-		if (errors.includes("info")) _errorMessage += "`Informazioni generali`";
-		if (errors.length === 2) _errorMessage += " e ";
-		if (errors.includes("results")) _errorMessage += "`Risultati`";
-		if (errors.length !== 0) return setErrorMessage(_errorMessage);
-		setErrorMessage("");
-
-		const results = selectedPlayers.map((selectedPlayer) => ({
+		const results = selectedPlayers.map((selectedPlayer, idx) => ({
 			playerId: selectedPlayer.id,
-			archetypeId: selectedPlayer.archetype.id,
+			archetypeId: selectedPlayer.archetype,
 			score: parseInt(selectedPlayer.score),
+			rank: idx,
 		}));
 
 		createEvent({
@@ -100,111 +107,122 @@ export const CreateEvent = () => {
 			name,
 			date,
 			results,
+			seasonId,
 			leagueId: user.leagueId,
 		});
 	};
 
-	const contextValue = {
-		date,
-		setDate,
-		name,
-		setName,
-		selectedPlayers,
-		setSelectedPlayers,
-		isPlayerSelected,
-		toggleSelection,
-		archetypes,
-		players,
-		type,
-		setType,
-	};
-
 	return (
-		<CreateEventContext.Provider value={contextValue}>
-			<div className="flex flex-col gap-y-2">
-				<Button.Light onClick={() => navigate(-1)}>
-					<CaretLeft size={14} />
-					Indietro
-				</Button.Light>
-				<T.Heading1 className="mt-4">Nuovo evento</T.Heading1>
-			</div>
-			<hr />
-			<Info />
-			<PlayerSelection />
-			<Results />
-			<div className="flex items-center gap-4 self-end">
-				{errorMessage && (
-					<div className="flex gap-2 py-2 px-3 bg-red-500 text-white border border-transparent rounded-sm">
-						<Icon.Danger className="h-5 w-5" />
-						{errorMessage}
+		<CreateEventContext.Provider
+			value={{
+				date,
+				name,
+				selectedPlayers,
+				archetypes,
+				players,
+				type,
+				seasons,
+				seasonId,
+				setName,
+				setDate,
+				isPlayerSelected,
+				setSelectedPlayers,
+				toggleSelection,
+				setType,
+				setSeasonId,
+			}}
+		>
+			<div>
+				<div className="mb-4 flex justify-between">
+					<Button onClick={() => navigate(-1)}>
+						<CaretLeft size={14} />
+						Indietro
+					</Button>
+					<Button className="px-8" onClick={submit} variant="dark">
+						Crea evento
+					</Button>
+				</div>
+				<div className="grid grid-cols-[368px_auto] gap-16">
+					<div className="h-fit rounded-lg border border-gray-200 bg-gray-50 p-6">
+						<GeneralInformation />
+						<hr className="my-6" />
+						<PartecipantsSelection />
 					</div>
-				)}
-				<Button.Light onClick={submit}>Crea evento</Button.Light>
+					<Results />
+				</div>
 			</div>
 		</CreateEventContext.Provider>
 	);
 };
 
-const Info = () => {
-	const { date, setDate, name, setName, type, setType } =
+const GeneralInformation = () => {
+	const { date, setDate, name, setName, seasons, setSeasonId, type, setType } =
 		React.useContext(CreateEventContext);
 
 	return (
-		<div className="flex flex-col gap-y-4">
-			<T.Heading2>Informazioni generali</T.Heading2>
-			<Container.Root className="p-8 gap-4">
-				<div className="grid grid-cols-[30%_auto] items-start gap-x-4">
-					<div className="flex items-center gap-x-2">
-						<Hash size={14} />
-						<span className="font-medium">Tipo</span>
-					</div>
-					<Select
-						value={type}
-						onChange={(e) => setType(e.target.value)}
-						$fullWidth
-					>
-						<option value="regular">Tappa regolare</option>
-						<option value="off_season">Evento one shot</option>
-					</Select>
-				</div>
+		<div>
+			<span className="mb-6 block text-base font-medium text-gray-600">
+				Informazioni generali
+			</span>
+			<div className="mb-3">
+				<span className="mb-1 block font-medium text-gray-600">Stagione</span>
+				<Select
+					value={setSeasonId}
+					onChange={(e) => setSeasonId(e.target.value)}
+					fullWidth
+				>
+					<option value="" disabled selected>
+						Seleziona una season
+					</option>
+					{seasons.map((season) => (
+						<option value={season.id}>
+							{season.endsAt} {season.name}
+						</option>
+					))}
+				</Select>
+			</div>
+			<div className="mb-3">
+				<span className="mb-1 block font-medium text-gray-600">Tipo</span>
+				<Select
+					value={type}
+					onChange={(e) => setType(e.target.value)}
+					fullWidth
+				>
+					<option value={eventTypes.REGULAR}>Classificata</option>
+					<option value={eventTypes.OFF_SEASON}>Non classificata</option>
+				</Select>
+			</div>
 
-				{type === "off_season" && (
-					<div className="grid grid-cols-[30%_auto] items-start gap-x-4">
-						<div className="flex items-center gap-x-2">
-							<Icon.Tag className="h-5 w-5" />
-							<span className="font-medium">Nome</span>
-						</div>
-						<Input
-							placeholder="Nome"
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-						/>
-					</div>
-				)}
-
-				<div className="grid grid-cols-[30%_auto] items-start gap-x-4">
-					<div className="flex items-center gap-x-2">
-						<Icon.Calendar className="h-5 w-5" />
-						<span className="font-medium">Data</span>
-					</div>
+			{type === eventTypes.OFF_SEASON && (
+				<div className="mb-3">
+					<span className="mb-1 block font-medium text-gray-600">Nome</span>
 					<Input
-						type="date"
-						placeholder="Data"
-						value={date}
-						onChange={(e) => setDate(e.target.value)}
-						fullWidth
+						placeholder="Nome dell'evento"
+						value={name}
+						onChange={(e) => setName(e.target.value)}
 					/>
 				</div>
-			</Container.Root>
+			)}
+
+			<div className="mb-3">
+				<span className="mb-1 block font-medium text-gray-600">Data</span>
+				<Input
+					type="date"
+					placeholder="Data"
+					value={date}
+					onChange={(e) => setDate(e.target.value)}
+					fullWidth
+				/>
+			</div>
 		</div>
 	);
 };
 
-const PlayerSelection = () => {
+const PartecipantsSelection = () => {
 	const { players, isPlayerSelected, toggleSelection } =
 		React.useContext(CreateEventContext);
 
-	const [serachValue, setSearchValue] = React.useState("");
+	const [query, setQuery] = React.useState("");
 
 	const [showModal, setShowModal] = React.useState(false);
 
@@ -216,91 +234,67 @@ const PlayerSelection = () => {
 		].some((combination) =>
 			combination
 				.toLowerCase()
-				.startsWith(serachValue.trim().replace(/\s\s+/g, " ").toLowerCase())
+				.startsWith(query.trim().replace(/\s\s+/g, " ").toLowerCase())
 		);
 	});
-
-	const { currentPage, currentPageNumber, setCurrentPageNumber, pageCount } =
-		usePaginate({
-			array: filteredPlayers,
-			pageSize: 10,
-		});
-
-	const pageIndexes = [...Array(pageCount).keys()];
 
 	return (
 		<>
 			{showModal && <NewPlayerModal hideModal={() => setShowModal(false)} />}
-			<div className="flex flex-col gap-y-4">
-				<div className="flex items-end justify-between">
-					<T.Heading2>Selezione giocatori</T.Heading2>
-					<Input
-						placeholder="Nome giocatore"
-						value={serachValue}
-						onChange={(e) => setSearchValue(e.target.value)}
-					/>
-				</div>
-				<Container.Root>
-					{currentPage.length !== 0 ? (
-						currentPage.map((player) => (
-							<div
-								key={player.id}
-								className={classNames(
-									"flex items-center justify-between px-8 py-5 border-b border-b-gray-200 cursor-pointer last:border-b-0",
-									{
-										"bg-gray-100": isPlayerSelected(player.id),
-										"hover:bg-gray-50": !isPlayerSelected(player.id),
-									}
-								)}
-								onClick={() => {
-									toggleSelection(player);
-									setSearchValue("");
-								}}
-							>
-								<div>
-									{player.firstName} {player.lastName}{" "}
-									<span className="text-xs text-gray-400">
-										({player.identifier})
-									</span>
-								</div>
-								<Icon.Checkbox
-									className="h-5 w-5"
-									checked={isPlayerSelected(player.id)}
-								/>
+			<span className="mb-6 block text-base font-medium text-gray-600">
+				Selezione partecipanti
+			</span>
+
+			<Input
+				className="mb-4"
+				placeholder="Ricerca giocatore"
+				value={query}
+				onChange={(e) => setQuery(e.target.value)}
+				searchIcon
+			/>
+			<div className="flex h-96 flex-col gap-2 overflow-auto">
+				{filteredPlayers.length !== 0 ? (
+					filteredPlayers.map((player) => (
+						<div
+							key={player.id}
+							className={clsx(
+								"flex cursor-pointer items-start justify-between rounded-lg border border-gray-200 p-4",
+								isPlayerSelected(player.id) && "bg-white shadow-sm"
+							)}
+							onClick={() => {
+								toggleSelection(player);
+								setQuery("");
+							}}
+						>
+							<div>
+								<span className="block font-medium text-gray-600">
+									{player.firstName} {player.lastName}
+								</span>
+								<span className="block text-xs text-gray-400">
+									{player.username}
+								</span>
 							</div>
-						))
-					) : (
-						<div className="px-8 py-5 text-gray-400 bg-white italic">
-							Nessun giocatore trovato, se vuoi registrare un nuovo giocatore
-							clicca{" "}
-							<span
-								className="underline font-semibold text-gray-700 cursor-pointer"
-								onClick={() => setShowModal(true)}
+							<div
+								className={clsx(
+									"flex h-5 w-7 items-center justify-center rounded-md border border-gray-300",
+									isPlayerSelected(player.id) &&
+										"border-none bg-gray-600 text-white"
+								)}
 							>
-								qui
-							</span>
+								{isPlayerSelected(player.id) && <Check size={12} />}
+							</div>
 						</div>
-					)}
-				</Container.Root>
-				{pageCount > 1 && (
-					<div className="flex items-center justify-center gap-x-2">
-						{pageIndexes.map((pageIndex) => (
-							<div
-								key={pageIndex}
-								className={classNames(
-									"flex items-center justify-center h-7 w-7 rounded-full cursor-pointer",
-									{
-										"text-gray-700 bg-gray-100 border border-gray-200":
-											currentPageNumber === pageIndex,
-										"text-gray-400 hover:bg-gray-100":
-											currentPageNumber !== pageIndex,
-									}
-								)}
-								onClick={() => setCurrentPageNumber(pageIndex)}
-							>
-								{pageIndex + 1}
-							</div>
-						))}
+					))
+				) : (
+					<div className="bg-white px-8 py-5 italic text-gray-400">
+						Nessun giocatore trovato, se vuoi registrare un nuovo giocatore
+						clicca{" "}
+						<span
+							className="cursor-pointer font-semibold text-gray-700 underline"
+							onClick={() => setShowModal(true)}
+						>
+							qui
+						</span>
 					</div>
 				)}
 			</div>
@@ -332,132 +326,60 @@ const Results = () => {
 		);
 
 	return (
-		<div className="flex flex-col gap-y-4">
-			<T.Heading2>Inserimento risultati</T.Heading2>
-			<Container.Root>
-				{selectedPlayers.length !== 0 ? (
-					selectedPlayers.map((player) => (
-						<div
-							key={player.id}
-							className="grid grid-cols-[auto_25%_25%_20px] grid-rows-[59px] gap-4 items-center px-8 border-b border-b-gray-200 last:border-b-0"
-						>
-							<div className="flex items-center gap-x-3">
-								<div>
-									{player.firstName} {player.lastName}{" "}
-									<span className="text-xs text-gray-400">
-										({player.identifier})
-									</span>
-								</div>
-							</div>
-							<Archetype
-								value={player.archetype}
-								onChange={(archetype) => setArchetype(player.id, archetype)}
-								// error={errors.includes("archetypeId")}
-							/>
-							<Score
-								value={player.score}
-								onChange={(score) => setScore(player.id, score)}
-								// error={errors.includes("score")}
-							/>
-							<Menu deselect={() => deselectPlayer(player.id)} />
+		<div>
+			<span className="mb-6 block text-base font-medium text-gray-600">
+				Partecipanti ({selectedPlayers.length})
+			</span>
+			<div className="flex flex-col gap-y-2">
+				{selectedPlayers.map((player) => (
+					<div
+						key={player.id}
+						className="grid grid-cols-[auto_30%_96px_20px] items-center gap-4 rounded-lg border border-gray-200 p-4"
+					>
+						<div>
+							<span className="block font-medium text-gray-600">
+								{player.firstName} {player.lastName}
+							</span>
+							<span className="block text-xs text-gray-400">
+								{player.username}
+							</span>
 						</div>
-					))
-				) : (
-					<div className="grid grid-rows-[59px] items-center px-8 text-gray-400 bg-white italic">
-						Nessun giocatore selzionato
+						<Archetype
+							value={player.archetype}
+							onChange={(archetype) => setArchetype(player.id, archetype)}
+							// error={errors.includes("archetypeId")}
+						/>
+						<Score
+							value={player.score}
+							onChange={(score) => setScore(player.id, score)}
+							// error={errors.includes("score")}
+						/>
+						<Menu deselect={() => deselectPlayer(player.id)} />
 					</div>
-				)}
-			</Container.Root>
+				))}
+			</div>
 		</div>
 	);
 };
 
-const Archetype = ({ value, onChange, error }) => {
+const Archetype = ({ onChange }) => {
 	const { archetypes } = React.useContext(CreateEventContext);
 
-	const dropdownRef = React.useRef(null);
-
-	const [show, setShow] = React.useState(false);
-
-	const toggleShow = () => {
-		setSearchValue("");
-		setShow(!show);
-	};
-
-	const [searchValue, setSearchValue] = React.useState("");
-
-	const sortedArchetypes = archetypes.sort((a, b) =>
-		a.name.localeCompare(b.name)
-	);
-
-	const filteredArchetypes = sortedArchetypes.filter((a) =>
-		a.name.toLowerCase().includes(searchValue.toLowerCase())
-	);
-
-	useClickOutside(dropdownRef, () => {
-		if (show) {
-			setSearchValue("");
-			setShow(false);
-		}
-	});
-
-	const handleArchetypeChange = (archetype) => {
-		onChange(archetype);
-		setShow(false);
-	};
-
-	const archetypeClass = classNames(
-		"relative bg-white border border-gray-300 rounded-sm outline-2",
-		{
-			"outline self-start z-10 translate-y-[11px]": show === true,
-			"outline outline-red-500": error && !value,
-		}
-	);
-
-	const chevronUpClass = classNames(
-		"absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400",
-		{
-			"rotate-180": !show,
-		}
-	);
-
 	return (
-		<div ref={dropdownRef} className={archetypeClass}>
-			<div onClick={toggleShow} className="relative px-4 py-2 cursor-pointer">
-				{value ? value.name : <span className="text-gray-400">Archetipo</span>}
-				<Icon.ChevronUp className={chevronUpClass} />
-			</div>
-			{show && (
-				<>
-					<div className="relative border-y border-y-gray-200 bg-gray-50">
-						<Input
-							placeholder="Nome archetipo"
-							value={searchValue}
-							onChange={(e) => setSearchValue(e.target.value)}
-							autoFocus
-						/>
-						<Icon.Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
-					</div>
-					<div className="max-h-[180px] overflow-y-auto cursor-pointer">
-						{filteredArchetypes.length !== 0 ? (
-							filteredArchetypes.map((archetype) => (
-								<div
-									key={archetype.id}
-									className="px-4 py-2 hover:bg-gray-100"
-									onClick={() => handleArchetypeChange(archetype)}
-								>
-									{archetype.name}
-								</div>
-							))
-						) : (
-							<div className="px-4 py-2 text-gray-400 bg-white italic">
-								Nessun archetipo trovato
-							</div>
-						)}
-					</div>
-				</>
-			)}
-		</div>
+		<Select
+			onChange={(e) => {
+				console.log(e.target.value);
+				onChange(e.target.value);
+			}}
+			fullWidth
+		>
+			<option vlaue="" disabled selected>
+				Seleziona un archetipo
+			</option>
+			{archetypes.map((archetype) => (
+				<option value={archetype.id}>{archetype.name}</option>
+			))}
+		</Select>
 	);
 };
 
@@ -475,6 +397,7 @@ const Score = ({ value, onChange, error }) => {
 			placeholder="Punteggio"
 			value={value || ""}
 			onChange={handleChange}
+			fullWidth
 		/>
 	);
 };
@@ -490,15 +413,15 @@ const Menu = ({ deselect }) => {
 	return (
 		<div ref={menuRef} className="relative">
 			<div
-				className="relative z-0 cursor-pointer after:absolute after:rounded-full after:-z-10 after:h-7 after:w-7 after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 hover:after:bg-gray-200"
+				className="relative z-0 cursor-pointer after:absolute after:top-1/2 after:left-1/2 after:-z-10 after:h-7 after:w-7 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full hover:after:bg-gray-200"
 				onClick={toggleShow}
 			>
-				<Icon.MoreHorizontal className="h-5 w-5" />
+				<DotsThree size={20} />
 			</div>
 			{show && (
-				<div className="absolute top-2 right-2 flex flex-col gap-y-1 p-1 bg-white rounded-sm border border-gray-200 shadow-md">
+				<div className="absolute top-2 right-2 flex flex-col gap-y-1 rounded-sm border border-gray-200 bg-white p-1 shadow-md">
 					<div
-						className="px-3 py-2 rounded-sm text-red-500 cursor-pointer hover:bg-red-50"
+						className="cursor-pointer rounded-sm px-3 py-2 text-red-500 hover:bg-red-50"
 						onClick={deselect}
 					>
 						Deseleziona

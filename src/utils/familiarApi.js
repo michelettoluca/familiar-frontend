@@ -155,8 +155,16 @@ export const getLeaguePlayers = async ({ leagueId }) => {
 	return data;
 };
 
-export const createEvent = async ({ type, name, date, results, leagueId }) => {
+export const createEvent = async ({
+	seasonId,
+	type,
+	name,
+	date,
+	results,
+	leagueId,
+}) => {
 	const { data } = await PrivateClient.post(`/events`, {
+		seasonId,
 		type,
 		name,
 		date,

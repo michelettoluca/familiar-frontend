@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import clsx from "clsx";
 
 import React from "react";
 import { Link, Outlet, useParams } from "react-router-dom";
@@ -7,97 +7,34 @@ import { useSession } from "../../contexts/SessionContext";
 
 import * as api from "../../utils/familiarApi";
 
-import * as Container from "../../components/shared/Container";
-import * as T from "../../components/shared/Typography";
 import { Input } from "../../components/shared/Input";
 import { Plus } from "phosphor-react";
-
-const StyledPlayers = styled(Container.Root)`
-	background-color: var(--gray-50);
-	display: grid;
-	gap: 1rem;
-`;
-
-const StyledPlayerList = styled.div`
-	height: 100%;
-	overflow-y: auto;
-	display: grid;
-	gap: 0.5rem;
-`;
-
-const Player = styled(Link)`
-	text-decoration: none;
-
-	padding: 1rem;
-
-	border: 1px solid var(--gray-200);
-	border-radius: 0.5rem;
-
-	${({ $isActive }) =>
-		$isActive &&
-		css`
-			background-color: var(--white);
-			box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 4px;
-			border: 1px solid var(--gray-300);
-		`}
-`;
-
-const FullName = styled.span`
-	display: block;
-	color: var(--gray-800);
-	font-weight: 600;
-`;
-
-const Username = styled.span`
-	color: var(--gray-600);
-	font-size: 0.75rem;
-`;
-
-const PageLayout = styled.div`
-	display: grid;
-	gap: 4rem;
-	grid-template-columns: 1fr 2fr;
-`;
-
-const DashedButton = styled.button`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 0.5rem;
-
-	padding: 1rem 1.25rem;
-
-	width: ${({ fullWidth }) => (fullWidth ? "100%" : "fit-content")};
-
-	color: var(--gray-600);
-
-	border: 1px dashed var(--gray-300);
-	border-radius: var(--border-radius);
-	stroke-dashoffset: 4px;
-	stroke-dasharray: 4px;
-	background-color: var(--gray-100);
-`;
+import { Button } from "../../components/shared/Button";
 
 export const Players = () => {
 	const [searchValue, setSearchValue] = React.useState("");
 
 	return (
-		<PageLayout>
-			<StyledPlayers>
-				<T.Heading5>Giocatori</T.Heading5>
-				<DashedButton fullWidth>
+		<div className="grid grid-cols-[368px_auto]">
+			<div className="h-fit rounded-lg border border-gray-200 bg-gray-50 p-6">
+				<span className="mb-6 block text-base font-medium text-gray-600">
+					Giocatori
+				</span>
+				<Button className="mb-4 border-dashed bg-transparent py-5" fullWidth>
 					<Plus /> Aggiungi un altro giocatore
-				</DashedButton>
+				</Button>
 				<Input
+					className="mb-4"
 					placeholder="Cerca giocatore"
 					value={searchValue}
 					onChange={(e) => setSearchValue(e.target.value)}
+					searchIcon
 					fullWidth
 				/>
 				<PlayerList searchValue={searchValue} />
-			</StyledPlayers>
+			</div>
 			<Outlet />
-		</PageLayout>
+		</div>
 	);
 };
 
@@ -130,21 +67,28 @@ const PlayerList = ({ searchValue }) => {
 	});
 
 	return (
-		<StyledPlayerList>
-			{players.length !== 0
-				? filteredPlayers.map((player) => (
-						<Player
-							key={player.id}
-							to={`${player.id}`}
-							$isActive={isActive(player.id)}
-						>
-							<FullName>
+		<div className="flex h-96 flex-col gap-2 overflow-auto">
+			{players.length !== 0 &&
+				filteredPlayers.map((player) => (
+					<Link
+						className={clsx(
+							"flex cursor-pointer items-start justify-between rounded-lg border border-gray-200 p-4",
+							isActive(player.id) && "bg-white shadow-sm"
+						)}
+						key={player.id}
+						to={`${player.id}`}
+						$isActive={isActive(player.id)}
+					>
+						<div>
+							<span className="block font-medium text-gray-600">
 								{player.firstName} {player.lastName}
-							</FullName>
-							<Username>{player.username}</Username>
-						</Player>
-				  ))
-				: null}
-		</StyledPlayerList>
+							</span>
+							<span className="block text-xs text-gray-400">
+								{player.username}
+							</span>
+						</div>
+					</Link>
+				))}
+		</div>
 	);
 };

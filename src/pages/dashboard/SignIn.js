@@ -45,9 +45,14 @@ export const SignIn = () => {
 	};
 
 	if (status === "loading")
-		return <Spinner className="animate-spin" size={24} />;
+		return (
+			<Spinner
+				className="fixed top-[calc(50%_-_16px)] left-[calc(50%_-_16px)] animate-spin"
+				size={32}
+			/>
+		);
 
-	if (status === "error") return <span>error</span>;
+	// if (status === "error") return <span>error</span>;
 
 	if (user?.role === role.ORGANIZER)
 		return <Navigate to="/dashboard" replace={true} />;
@@ -55,21 +60,19 @@ export const SignIn = () => {
 	return (
 		<div
 			className="
-			border-gray-200 p-6 
-			sm:mx-auto sm:w-96 sm:rounded-lg sm:border sm:shadow-xl md:mt-16
-		"
+				flex h-screen flex-col justify-center  border-gray-200 p-6 
+				sm:mx-auto sm:mt-16 sm:h-auto sm:w-96 sm:rounded-lg sm:border sm:shadow-xl
+			"
 		>
 			<h1 className="text-2xl font-bold text-gray-800">Familiar</h1>
-			<span className="color mb-4 block font-medium text-gray-400">
-				Dashboard
-			</span>
+			<span className="mb-4 block font-medium text-gray-400">Dashboard</span>
 			<form
 				onSubmit={(e) => {
 					e.preventDefault();
 					handleSignIn();
 				}}
 			>
-				<span className="mb-1 block text-gray-400">Lega</span>
+				<span className="mb-1 block font-medium text-gray-600">Lega</span>
 				<Select
 					className="mb-4"
 					value={username}
@@ -83,7 +86,7 @@ export const SignIn = () => {
 						</option>
 					))}
 				</Select>
-				<span className="mb-1 block text-gray-400">Password</span>
+				<span className="mb-1 block font-medium text-gray-600">Password</span>
 				<Input
 					type="password"
 					className="mb-4"
